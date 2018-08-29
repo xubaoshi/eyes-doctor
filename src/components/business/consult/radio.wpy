@@ -1,0 +1,148 @@
+<script>
+  import wepy from 'wepy'
+  export default class ConsultIndex extends wepy.component {
+    props = {
+      items: {
+        twoWay: true
+      },
+      type: {},
+      showRadio: {},
+      detailPath: {}
+    }
+    methods = {
+      radioChange(e) {
+        this.$emit('change', e)
+      },
+      handleGoDetail(value) {
+        if (!this.showRadio) {
+          wepy.navigateTo({
+            url: `${this.detailPath}?id=${value}`
+          })
+        }
+      }
+    }
+  }
+</script>
+
+<template>
+  <radio-group class="zan-radio radio-class" @change="radioChange" wx:if="{{ items && items.length }}">
+    <repeat for="{{ items }}">
+      <label @tap='handleGoDetail({{item.value}})' class="zan-radio__label {{ type === 'list' ? 'zan-radio__list-item' : 'zan-radio__item'}}">
+                <view class="zan-radio__icon-wrap" wx:if='{{showRadio}}'>
+                  <view class="zan-radio__icon {{ item.disabled ? 'zan-radio--disabled' : '' }} {{ item.checked ? 'zan-radio--checked radio-color' : '' }}">
+                    <view class="zan-radio__icon-inside"></view>
+                  </view>
+                  <radio
+                    class="zan-radio__origin"
+                    value="{{ item.value }}"
+                    checked="{{ item.checked }}"
+                    disabled="{{ item.disabled }}"
+                  />
+                </view>
+                <view class="zan-radio__name">
+                  <view class='name'>
+                    {{item.relation}}
+                  </view>
+                  <view class='sub-name'>
+                    {{item.subName}}
+                  </view>
+                  <text class='iconfont  icon-zhankai arrow' wx:if='{{!showRadio}}'></text>
+                </view>
+              </label>
+    </repeat>
+  </radio-group>
+</template>
+
+<style lang="less" scoped>
+  @import '../../../styles/zanui/icon';
+  .zan-radio {
+    display: block;
+    padding-left: 30rpx;
+    font-size: 14px;
+    border-bottom: solid 1px #e5e5e5;
+    &__item {
+      display: flex;
+      position: relative;
+      border-bottom: solid 1px #e5e5e5;
+      align-items: center;
+      padding: 16rpx 0;
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+    &__list-item {
+      display: block;
+      padding: 10px 10px 10px 0;
+      border-bottom: 1px solid #e5e5e5;
+      .zan-radio__icon-wrap {
+        float: right;
+        margin-top: 3px;
+      }
+    }
+    &__icon-wrap {
+      position: relative;
+      width: 46rpx;
+      height: 52rpx;
+      display: inline-flex;
+      align-items: center;
+      color: #aaa;
+      .zan-radio__origin {
+        opacity: 0;
+        width: 46rpx;
+        height: 52rpx;
+      }
+      .zan-radio__icon {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid #dcdfe6;
+        border-radius: 100%;
+        width: 46rpx;
+        height: 46rpx;
+        background-color: #fff;
+        cursor: pointer;
+        box-sizing: border-box;
+        .zan-radio__icon-inside {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+        }
+        &.zan-radio--checked {
+          border-color: #15C4A6;
+          background: #15C4A6;
+          .zan-radio__icon-inside {
+            background-color: #fff;
+          }
+        }
+        &.zan-radio--disabled {
+          opacity: .6;
+        }
+      }
+    }
+    &__name {
+      display: inline-block;
+      margin-left: 10px;
+      .name {
+        font-size: 32rpx;
+      }
+      .sub-name {
+        color: #888888;
+        font-size: 26rpx;
+      }
+    }
+    .arrow {
+      position: absolute;
+      right: 32rpx;
+      bottom: 50%;
+      margin-bottom: -13rpx;
+      font-size: 26rpx;
+      color: #c7c7c7;
+      font-weight: bold;
+    }
+  }
+</style>

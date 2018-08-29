@@ -1,0 +1,75 @@
+<script>
+  import wepy from 'wepy'
+  import userService from '@/api/user'
+  import zanLoadmore from '@/components/zanui/zan-loadmore'
+  import lang from '@/utils/lang'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '提现历史'
+    }
+    components = {
+      zanLoadmore
+    }
+    data = {
+      cashHistory: {},
+      isLoading: false,
+      scrollHeight: 0
+    }
+    computed = {
+      list() {
+        if (lang.isEmpty(this.cashHistory.list)) {
+          return []
+        } else {
+          return this.cashHistory.list
+        }
+      }
+    }
+    async onLoad() {
+      wepy.getSystemInfo().then(res => {
+        this.scrollHeight = res.windowHeight + 160
+        this.$apply()
+      })
+      this.cashHistory = await userService.cashHistory().next()
+      this.$apply()
+    }
+    methods = {
+      async bindDownLoad() {
+        let arr = []
+        if (lang.isEmpty(this.cashHistory) || parseInt(this.cashHistory.pages) === parseInt(this.cashHistory.pageNo)) {
+          return
+        }
+        if (this.isLoading) {
+          return
+        }
+        this.isLoading = true
+        this.$apply()
+        arr = await userService.cashHistory().next()
+        arr.list = this.cashHistory.list.concat(arr.list)
+        this.cashHistory = arr
+        this.isLoading = false
+        this.$apply()
+      }
+    }
+  }
+</script>
+
+<template>
+  <scroll-view @scrolltolower="bindDownLoad" scroll-y style="height:{{scrollHeight}}px;">
+    <view class='cash-record'>
+      <repeat for='{{list}}'>
+        <view class='cash-rcd-item clear'>
+          <view class='cash-rcd-bd'>
+            {{item.card}}提现<text class='cash-rcd-status'>{{item.status}}</text>
+            <view class='cash-rcd-time'>{{item.dateFormat}}</view>
+          </view>
+          <view class='cash-rcd-num'>+{{item.money}}</view>
+        </view>
+      </repeat>
+    </view>
+    <zanLoadmore :loading.sync="isLoading"> </zanLoadmore>
+  </scroll-view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../../styles/module/m_bank.less');
+</style>

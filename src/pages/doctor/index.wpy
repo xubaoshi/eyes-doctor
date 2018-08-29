@@ -1,0 +1,18 @@
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '爱眼康'
+    }
+  }
+</script>
+
+<template>
+  <view>
+    this is doctor page
+  </view>
+</template>
+
+<style lang="less" scoped>
+
+</style>

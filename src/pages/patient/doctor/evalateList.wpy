@@ -1,0 +1,123 @@
+<script>
+  import wepy from 'wepy'
+  import {
+    connect
+  } from 'wepy-redux'
+  import lang from '@/utils/lang'
+  import store from '@/store/utils'
+  import evaluateService from '@/api/evaluate'
+  import zanLoadmore from '@/components/zanui/zan-loadmore'
+  @connect({
+    evaluate: store.get('evaluate'),
+    doctorEvaluate: store.get('doctorEvaluate')
+  })
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '患者评价'
+    }
+    components = {
+      zanLoadmore
+    }
+    data = {
+      doctorId: '',
+      isLoading: false,
+      scrollTop: 0,
+      scrollHeight: 0,
+      showAllEval: false // 是否显示全部医生的评价
+    }
+    onLoad(e) {
+      wepy.getSystemInfo().then(res => {
+        this.scrollHeight = res.windowHeight + 160
+        this.$apply()
+      })
+      if (e.type === 'all') {
+        this.showAllEval = true
+      } else {
+        this.showAllEval = false
+        this.doctorId = e.doctorId
+        wepy.setNavigationBarTitle({
+          title: '更多评价'
+        })
+      }
+      const source = e.type === 'all' ? this.evaluate : this.doctorEvaluate
+      this.$apply()
+      if (lang.isNotEmpty(source.list) && source.list.length > 10) {
+        source.list.splice(10, source.list.length - 1)
+        source.pageNo = 1
+        e.type === 'all' ? store.save('evaluate', source) : store.save('doctorEvaluate', source)
+      }
+    }
+    computed = {
+      evaluateList() {
+        const source = this.showAllEval ? this.evaluate : this.doctorEvaluate
+        if (lang.isEmpty(source) || lang.isEmpty(source)) {
+          return []
+        } else {
+          return source.list
+        }
+      }
+    }
+    methods = {
+      async bindDownLoad() {
+        const source = this.showAllEval ? this.evaluate : this.doctorEvaluate
+        let arr = []
+        if (parseInt(source.pages) === parseInt(source.pageNo)) {
+          return
+        }
+        if (this.isLoading) {
+          return
+        }
+        this.isLoading = true
+        this.$apply()
+        // 设置请求参数医生详情页需添加 doctorId 参数
+        const param = this.showAllEval ? {} : {
+          doctorId: this.doctorId
+        }
+        arr = await evaluateService.list().next(param)
+        arr.list = arr.list.concat(source.list)
+        this.showAllEval ? store.save('evaluate', arr) : store.save('doctorEvaluate', arr)
+        this.isLoading = false
+        this.$apply()
+      }
+    }
+  }
+</script>
+
+<template>
+  <!-- S 评价部分 -->
+  <scroll-view @scrolltolower="bindDownLoad" class='cmt-wrap' scroll-y style="height:{{scrollHeight}}px;">
+    <view class='cmt-top' wx:if='{{!showAllEval}}'>
+      <text class='cmt-eval' wx:if='{{doctorEvaluate && doctorEvaluate.extra.satisfyNum}}'>满意({{doctorEvaluate.extra.satisfyNum}})</text>
+      <text class='cmt-eval' wx:if='{{doctorEvaluate && doctorEvaluate.extra.generalNum}}'>一般({{doctorEvaluate.extra.generalNum}})</text>
+      <text class='cmt-eval' wx:if='{{doctorEvaluate && doctorEvaluate.extra.unsatisfyNum}}'>不满意({{doctorEvaluate.extra.unsatisfyNum}})</text>
+    </view>
+    <!-- /评价顶部 -->
+    <view class='cmt-lst'>
+      <!-- /评价列表项，循环 -->
+      <repeat for='{{evaluateList}}' item='item'>
+        <view class='cmt-item'>
+          <view class='cmt-hd'>
+            <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+            <text class='cmt-author'>{{item.userName}}</text>
+            <text class='cmt-eval'>{{item.eval}}</text>
+            <text class='cmt-date'>{{item.dateFormat}}</text>
+          </view>
+          <view class='cmt-bd'>
+            <text class='cmt-doc'>主治医生：{{item.doctorName}}</text>
+            <view class='cmt-txt'>
+              {{item.evalContent}}
+            </view>
+          </view>
+        </view>
+      </repeat>
+      <!-- /评价列表项，循环 -->
+    </view>
+    <!-- /评价列表 -->
+    <zanLoadmore :loading.sync="isLoading"> </zanLoadmore>
+  </scroll-view>
+  <!-- E 评价部分 -->
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../styles/components/comment.less');
+</style>

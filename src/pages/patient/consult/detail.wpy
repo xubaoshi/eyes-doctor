@@ -1,0 +1,113 @@
+<script>
+  import wepy from 'wepy'
+  import consultService from '@/api/consult'
+  import lang from '@/utils/lang'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '详情'
+    }
+    data = {
+      consult: {},
+      doctorId: '',
+      isCurent: false
+    }
+    computed = {
+      list() {
+        if (lang.isEmpty(this.consult) || lang.isEmpty(this.consult.messages)) {
+          return []
+        } else {
+          return this.consult.messages
+        }
+      },
+      doctor() {
+        if (lang.isEmpty(this.consult) || lang.isEmpty(this.consult.doctor)) {
+          return []
+        } else {
+          return this.consult.doctor
+        }
+      }
+    }
+    onLoad(e) {
+      this.doctorId = e.doctorId
+      if (e.isCurent) {
+        this.isCurent = true
+      } else {
+        this.isCurent = false
+      }
+      this.$apply()
+    }
+    async onShow() {
+      this.consult = await consultService.detail({
+        doctorId: this.doctorId
+      })
+      this.$apply()
+    }
+    methods = {
+      videoErrorCallback(e) {
+        console.log(e)
+      },
+      handleGoConsultAdd(doctorId) {
+        wepy.navigateTo({
+          url: `/pages/patient/consult/add?consultId=${this.consult.id}&isCurent=${this.isCurent}`
+        })
+      },
+      handlePreview(item) {
+        wepy.previewImage({
+          urls: [item.content]
+        })
+      }
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 医生简介 -->
+    <view class='doc-profile'>
+      <view class='doc-info'>
+        <view class='doc-name'>{{doctor.name}}</view>
+        <view class='doc-title'>
+          <text class='txt'>{{doctor.title}}</text>
+          <text class='txt'>{{doctor.hospitalName}}</text>
+        </view>
+        <image class='doc-avatar' mode='aspectFill' src='{{doctor.avatar}}'></image>
+      </view>
+    </view>
+    <!-- S 聊天界面 -->
+    <view class='chat-wrap'>
+      <repeat for='{{list}}'>
+        <block wx:if="{{item.from === 'doctor'}}">
+          <view class='chat-txt chat-txt-receive'>
+            <view class='chat-txt'>
+              <image class='avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+              <view class='txt'>{{item.content}} </view>
+            </view>
+          </view>
+        </block>
+        <block wx:elif="{{item.from === 'user'}}">
+          <view class='chat-txt chat-txt-send'>
+            <image class='avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+            <view wx:if="{{item.type === 'text'}}" class='txt'>{{item.content}} </view>
+            <view wx:elif="{{item.type === 'image'}}" class='txt txt-img' @tap='handlePreview({{item}})'>
+              <image class='img' mode='aspectFill' src='{{item.content}}'></image>
+            </view>
+            <!-- <view wx:elif="{{item.type === 'vedio'}}"  class='txt txt-vedio'>
+                      <video src="{{item.content}}" objectFit="cover" class='vedio' id="video{{index}}"  @error="videoErrorCallback"></video>
+                    </view> -->
+          </view>
+        </block>
+      </repeat>
+    </view>
+    <!-- E 聊天界面 -->
+    <!-- S 底部立即咨询悬浮按钮 -->
+    <view class='fix-btm'>
+      <button type='primary' @tap='handleGoConsultAdd({{doctorId}})'>快速回复</button>
+    </view>
+    <!-- E 底部立即咨询悬浮按钮 -->
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../styles/components/doc_profile.less');
+  @import url('../../../styles/components/chat.less');
+</style>

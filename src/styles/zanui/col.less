@@ -1,0 +1,13 @@
+.zan-col {
+  float: left;
+  box-sizing: border-box;
+  width: 0;
+}
+
+.generate-columns(24);
+
+.generate-columns(24, @i: 1) when (@i =< 24) {
+  .zan-col-@{i} { width: @i * 100% / 24; }
+  .zan-col-offset-@{i} { margin-left: @i * 100% / 24; }
+}
+

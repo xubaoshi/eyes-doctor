@@ -1,0 +1,164 @@
+<script>
+  /* eslint-disable */
+  import wepy from 'wepy'
+  import zanActionsheet from '@/components/zanui/zan-actionsheet'
+  import tips from '@/utils/tips'
+  import userService from '@/api/user'
+  import lang from '@/utils/lang'
+  export default class Cash extends wepy.page {
+    config = {
+      navigationBarTitleText: '添加银行卡'
+    }
+    components = {
+      zanActionsheet
+    }
+    data = {
+      allCards: [],
+      selectedBank: null
+    }
+    async onLoad() {
+      const allCards = await userService.allCards()
+      this.allCards = allCards
+      this.$apply()
+    }
+    computed = {
+      bank() {
+        if (this.selectedBank) {
+          return this.selectedBank.cardName
+        } else {
+          return '请选择银行'
+        }
+      }
+    }
+    methods = {
+      handleSelectBank() {
+        this.$invoke('zanActionsheet', 'showZanActionsheet', {
+            show: false,
+            closeOnClickOverlay: true,
+            cancelText: false,
+            actions: this.getActionSheetCards()
+          }).then(result => {
+            const card = this.allCards.find(card => {
+              return card.cardName === result.type
+            })
+            this.selectedBank = card
+            this.$apply()
+          })
+          .catch(e => {})
+      },
+      async confirm(e) {
+        const pattern = /^([1-9]{1})(\d{14}|\d{18})$/
+        const str = e.detail.value.cardNo.replace(/\s+/g, '')
+        // 校验持卡人
+        if (!e.detail.value.userName) {
+          tips.toast('请输入持卡人', null, 'none')
+          return
+        }
+        // 校验卡号
+        if (!e.detail.value.cardNo) {
+          tips.toast('请输入正确卡号', null, 'none')
+          return
+        }
+        // 校验卡号格式
+        if (!pattern.test(str)) {
+          tips.toast('请输入正确卡号', null, 'none')
+          return
+        }
+        // 校验卡号
+        if (!this.selectedBank) {
+          tips.toast('请选择银行', null, 'none')
+        }
+        await userService.addCard({
+          userName: e.detail.value.userName,
+          cardNo: e.detail.value.cardNo,
+          cardName: this.selectedBank.cardName
+        })
+        wepy.navigateBack()
+      }
+    }
+    getActionSheetCards() {
+      if (lang.isEmpty(this.allCards)) {
+        return []
+      } else {
+        const arr = this.allCards.map(card => {
+          return {
+            type: card.cardName,
+            name: card.cardName
+          }
+        })
+        return arr
+      }
+    }
+  }
+</script>
+
+<template>
+  <view class="container">
+    <view class='tips'>请绑定持卡人本人的银行卡</view>
+    <form @submit="confirm">
+      <view class="weui-cells-form">
+        <!-- S 持卡人 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">持卡人</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="userName" placeholder="请输入持卡人" maxlength="5" value="{{userName}}" />
+          </view>
+        </view>
+        <!-- E 持卡人 -->
+        <!-- S 卡号 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">卡号</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='number' name="cardNo" placeholder="请输入卡号" maxlength="19" />
+          </view>
+        </view>
+        <!-- E 卡号 -->
+        <!-- S 出生日期 -->
+        <view class="weui-cell" @tap='handleSelectBank'>
+          <view class="weui-cell__hd">
+            <view class="weui-label">银行</view>
+          </view>
+          <view class="weui-cell__bd">
+            <view class='txt'>{{bank}}</view>
+            <text class='iconfont  icon-zhankai arrow'></text>
+          </view>
+        </view>
+        <!-- E 出生日期 -->
+      </view>
+      <!--操作栏-->
+      <button class="weui-btn" type="primary" form-type="submit">提 交</button>
+    </form>
+    <zanActionsheet></zanActionsheet>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  .container {
+    background-color: #f5f5f5;
+  }
+  .weui-cells-form {
+    background-color: #ffffff;
+  }
+  .txt {
+    color: #9B9B9B;
+  }
+  .tips {
+    padding: 30rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 26rpx;
+    color: #9B9B9B;
+  }
+  .arrow {
+    position: absolute;
+    right: 32rpx;
+    bottom: 43%;
+    margin-bottom: -13rpx;
+    font-size: 26rpx;
+    color: #c7c7c7;
+    font-weight: bold;
+  }
+</style>

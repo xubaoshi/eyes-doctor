@@ -1,0 +1,41 @@
+<script>
+  import wepy from 'wepy'
+  import userService from '@/api/user'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '我发展的用户'
+    }
+    data = {
+      users: []
+    }
+    async onLoad() {
+      const arr = await userService.users()
+      this.users = arr
+      this.$apply()
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 收入明细 -->
+    <view class='user-lst user-dev-lst'>
+      <repeat for='{{users}}'>
+         <!-- 循环user-item -->
+        <view class='user-item'>
+          <image class='avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+          <view class='user-hd'>
+            {{item.name}}
+            <text class='date'>{{item.dateFormat}}</text>
+          </view>
+        </view>
+        <!-- / user-item -->
+      </repeat>
+    </view>
+    <!-- E 收入明细 -->
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../../styles/components/c_user.less');
+</style>

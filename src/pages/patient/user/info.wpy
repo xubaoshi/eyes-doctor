@@ -1,0 +1,135 @@
+<script>
+  /* eslint-disable */
+  import wepy from 'wepy'
+  import store from '@/store/utils'
+  import {
+    connect
+  } from 'wepy-redux'
+  import zanActionsheet from '@/components/zanui/zan-actionsheet'
+  import tips from '@/utils/tips'
+  import userService from '@/api/user'
+  import {
+    baseUrl,
+    patientApi
+  } from '@/config'
+  @connect({
+    user: store.get('user')
+  })
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人信息'
+    }
+    onShow(){
+      userService.info()
+    }
+    methods = {
+      handleGoName() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/name'
+        })
+      },
+      handleChangeAvatar() {
+        this.$invoke('zanActionsheet', 'showZanActionsheet', {
+            show: false,
+            closeOnClickOverlay: true,
+            cancelText: false,
+            actions: [{
+                type: 'photo',
+                name: '拍照'
+              },
+              {
+                type: 'image',
+                name: '上传图片'
+              }
+            ]
+          }).then(result => {
+            if (result.type === 'photo') {
+              wepy.chooseImage({
+                count: 1,
+                sizeType: ['original', 'compressed'],
+                sourceType: ['camera']
+              }).then((res) => {
+                this.upload(res.tempFilePaths[0], 'image')
+              })
+            } else if (result.type === 'image') {
+              wepy.chooseImage({
+                count: 1,
+                sizeType: ['original', 'compressed'],
+                sourceType: ['album']
+              }).then((res) => {
+                this.upload(res.tempFilePaths[0], 'image')
+              })
+            }
+          })
+          .catch(e => {})
+      }
+    }
+    upload(path, type) {
+      tips.loading('上传中')
+      const url = `${baseUrl}${patientApi.upload.image}`
+      wepy.uploadFile({
+        url,
+        filePath: path,
+        name: 'file',
+        header: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(async (res) => {
+        const result = JSON.parse(res)
+        if (result.code != 0) {
+          tips.toast('上传失败', null, 'none')
+        } else {
+          await userService.updateUser({
+            avatar: result.data
+          })
+          userService.info()
+        }
+        tips.loaded()
+      }, (res) => {
+        tips.toast('上传失败', null, 'none')
+        tips.loaded()
+      })
+    }
+    components = {
+      zanActionsheet
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 表单列表 -->
+    <view class='ui-form'>
+      <view class='field field-xl' @tap='handleChangeAvatar'>
+        <text class='field-tit'>头像</text>
+        <view class='field-tail'>
+          <image class='avatar' mode='aspectFill' src='{{user.avatar}}'></image>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+      <view class='field' @tap='handleGoName'>
+        <text class='field-tit'>昵称</text>
+        <view class='field-tail'>
+          <text class='txt'>{{user.name}}</text>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+      <view class='field'>
+        <text class='field-tit'>手机号码</text>
+        <view class='field-tail'>
+          <text class='txt'>{{user.phone}}</text>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+    </view>
+    <!-- E 表单 -->
+    <zanActionsheet></zanActionsheet>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../styles/ui/ui_form.less');
+</style>

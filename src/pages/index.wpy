@@ -1,0 +1,70 @@
+<script>
+  import wepy from 'wepy'
+  import zanDialog from '@/components/zanui/zan-dialog'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '爱眼康'
+    }
+    components = {
+      zanDialog
+    }
+    onLoad() {
+      // 判断用户是否已经选择过角色
+      // 选择角色
+      this.selectRole()
+    }
+    selectRole() {
+      this.$invoke('zanDialog', 'showZanDialog', {
+        title: '角色选择',
+        content: '根据选择的角色将调往不同的页面',
+        showConfirm: false,
+        buttonsShowVertical: true,
+        buttons: [{
+          text: 'patient',
+          type: 'patient'
+        },
+        {
+          text: 'doctor',
+          type: 'doctor'
+        },
+        {
+          text: 'seller',
+          type: 'seller'
+        }
+        ]
+      }).then(({
+        type
+      }) => {
+        switch (type) {
+          case 'patient':
+            wepy.redirectTo({
+              url: './patient/index'
+            })
+            break;
+          case 'doctor':
+            wepy.redirectTo({
+              url: './doctor/index'
+            })
+            break;
+          case 'seller':
+            wepy.redirectTo({
+              url: './seller/index'
+            })
+            break;
+          default:
+            break;
+        }
+      })
+    }
+  }
+</script>
+
+<template>
+  <view class='container'>
+    <zanDialog/>
+  </view>
+</template>
+
+<style lang="less" scoped>
+
+</style>

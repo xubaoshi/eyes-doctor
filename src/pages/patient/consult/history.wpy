@@ -1,0 +1,97 @@
+<script>
+  import wepy from 'wepy'
+  import consultService from '@/api/consult'
+  import lang from '@/utils/lang'
+  import zanLoadmore from '@/components/zanui/zan-loadmore'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '历史记录'
+    }
+    components = {
+      zanLoadmore
+    }
+    data = {
+      consultList: {},
+      isLoading: false,
+      scrollHeight: 0
+    }
+    async onShow() {
+      wepy.getSystemInfo().then(res => {
+        this.scrollHeight = res.windowHeight + 160
+        this.$apply()
+      })
+      this.consultList = await consultService.history().next()
+      this.$apply()
+    }
+    computed = {
+      list() {
+        if (lang.isEmpty(this.consultList.list)) {
+          return []
+        } else {
+          return this.consultList.list
+        }
+      }
+    }
+    methods = {
+      async bindDownLoad() {
+        let arr = []
+        if (parseInt(this.consultList.pages) === parseInt(this.consultList.pageNo)) {
+          return
+        }
+        if (this.isLoading) {
+          return
+        }
+        this.isLoading = true
+        this.$apply()
+        arr = await consultService.history().next()
+        arr.list = this.consultList.list.concat(arr.list)
+        this.consultList = arr
+        this.isLoading = false
+        this.$apply()
+      },
+      handleGoEval(item) {
+        wepy.navigateTo({
+          url: `/pages/patient/consult/evaluate?doctorId=${item.doctorId}`
+        })
+      },
+      handleGoConsult(item) {
+        wepy.navigateTo({
+          url: `/pages/patient/consult/add?doctorId=${item.doctorId}`
+        })
+      }
+    }
+  }
+</script>
+
+<template>
+  <scroll-view @scrolltolower="bindDownLoad" scroll-y style="height:{{scrollHeight}}px;">
+    <!-- S 咨询部分 -->
+    <view class='cst-lst cst-lst-history'>
+      <!-- 循环.cst-item -->
+      <repeat for='{{list}}'>
+        <view class='cst-item'>
+          <view class='cst-bd'>
+            <image class='cst-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+            <view class='cst-info'>
+              <view class='cst-info-bd'>
+                <text class='cst-name'>{{item.name}}</text>
+                <text class='cst-date'>{{item.dateFormat}}</text>
+              </view>
+              <view class='cst-txt'>{{item.content}}</view>
+            </view>
+          </view>
+          <view class='cst-ft'>
+            <text wx:if="{{item.status === '0'}}" @tap='handleGoEval({{item}})' class='cst-ft-lnk cst-ft-lnk-primary'>评价</text>
+            <text wx:else="{{item.status === '1'}}" @tap='handleGoConsult({{item}})' class='cst-ft-lnk'>再次咨询</text>
+          </view>
+        </view>
+      </repeat>
+    </view>
+    <!-- E 咨询部分 -->
+    <zanLoadmore :loading.sync="isLoading"> </zanLoadmore>
+  </scroll-view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../styles/components/consult.less');
+</style>

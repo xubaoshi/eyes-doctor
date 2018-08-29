@@ -1,0 +1,128 @@
+<script>
+  import wepy from 'wepy'
+  import {
+    connect
+  } from 'wepy-redux'
+  import lang from '@/utils/lang'
+  import store from '@/store/utils'
+  import evaluateService from '@/api/evaluate'
+  @connect({
+    doctor: store.get('doctor'),
+    doctorEvaluate: store.get('doctorEvaluate')
+  })
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '详情'
+    }
+    computed = {
+      evaluateList() {
+        if (lang.isEmpty(this.doctorEvaluate) || lang.isEmpty(this.doctorEvaluate.list)) {
+          return []
+        } else {
+          if (this.doctorEvaluate.list.length > 10) {
+            return this.doctorEvaluate.list.slice(0, 10)
+          } else {
+            return this.doctorEvaluate.list
+          }
+        }
+      },
+      title() {
+        if (lang.isEmpty(this.doctorEvaluate) || lang.isEmpty(this.doctorEvaluate.list)) {
+          return '患者评价'
+        } else {
+          return `患者评价（${this.doctorEvaluate.records}）`
+        }
+      }
+    }
+    methods = {
+      handleGoCon(id) {
+        wepy.navigateTo({
+          url: `/pages/patient/consult/add?doctorId=${id}`
+        })
+      },
+      handleGoAllEval(id) {
+        wepy.navigateTo({
+          url: `/pages/patient/doctor/evalateList?doctorId=${id}`
+        })
+      }
+    }
+    async onLoad() {
+      // 设置请求参数医生详情页需添加 doctorId 参数
+      const param = {
+        doctorId: this.doctor.id
+      }
+      const arr = await evaluateService.list().next(param)
+      store.save('doctorEvaluate', arr)
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 医生简介 -->
+    <view class='doc-profile'>
+      <view class='doc-info'>
+        <view class='doc-name'>{{doctor.name}}</view>
+        <view class='doc-title'>
+          <text class='txt'>{{doctor.title}}</text>
+          <text class='txt'>{{doctor.hospitalName}}</text>
+        </view>
+        <image class='doc-avatar' mode='aspectFill' src='{{doctor.avatar}}'></image>
+      </view>
+      <view class='doc-ft'>
+        <view class='doc-ft-item'>
+          <view class='doc-ft-item-cell'><text class='txt'>{{doctor.price}}</text>元/次</view>
+          <view class='doc-ft-item-cell'><text class='txt'>{{doctor.praiseRate}}</text>%</view>
+        </view>
+        <view class='doc-ft-item'>
+          <view class='doc-ft-item-cell'>咨询人次</view>
+          <view class='doc-ft-item-cell'>好评率</view>
+        </view>
+      </view>
+    </view>
+    <!-- E 医生简介 -->
+    <!-- S 评价部分 -->
+    <view class='cmt-wrap'>
+      <view class='cmt-top'>
+        {{title}}
+        <text class='cmt-more' @tap='handleGoAllEval({{doctor.id}})'>查看全部 <text class='iconfont  icon-zhankai arrow'></text></text>
+      </view>
+      <!-- /评价顶部 -->
+      <view class='cmt-lst'>
+        <!-- /评价列表项，循环 -->
+        <repeat for='{{evaluateList}}' item='item'>
+          <view class='cmt-item'>
+            <view class='cmt-hd'>
+              <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+              <text class='cmt-author'>{{item.userName}}</text>
+              <text class='cmt-eval'>{{item.eval}}</text>
+              <text class='cmt-date'>{{item.dateFormat}}</text>
+            </view>
+            <view class='cmt-bd'>
+              <text class='cmt-doc'>主治医生：{{item.doctorName}}</text>
+              <view class='cmt-txt'>
+                {{item.evalContent}}
+              </view>
+            </view>
+          </view>
+        </repeat>
+        <!-- /评价列表项，循环 -->
+      </view>
+      <!-- /评价列表 -->
+    </view>
+    <!-- E 评价部分 -->
+    <!-- S 底部立即咨询悬浮按钮 -->
+    <view class='fix-btm'>
+      <button type='primary' @tap='handleGoCon({{doctor.id}})'>立即咨询({{doctor.price}}元/次)</button>
+    </view>
+    <!-- E 底部立即咨询悬浮按钮 -->
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../styles/components/comment.less');
+  @import url('../../../styles/components/doc_profile.less');
+  .cmt-wrap {
+    margin-bottom: 150rpx;
+  }
+</style>

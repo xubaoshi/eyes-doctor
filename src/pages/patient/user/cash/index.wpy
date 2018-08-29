@@ -1,0 +1,161 @@
+<script>
+  /* eslint-disable */
+  import wepy from 'wepy'
+  import store from '@/store/utils'
+  import tips from '@/utils/tips'
+  import userService from '@/api/user'
+  import lang from '@/utils/lang'
+  import validate from '@/utils/validate'
+  import zanActionsheet from '@/components/zanui/zan-actionsheet'
+  import {
+    connect
+  } from 'wepy-redux'
+  @connect({
+    user: store.get('user')
+  })
+  export default class Cash extends wepy.page {
+    config = {
+      navigationBarTitleText: '提现申请'
+    }
+    components = {
+      zanActionsheet
+    }
+    data = {
+      myCards: [],
+      selectedCard: null
+    }
+    async onShow() {
+      const myCards = await userService.myCards()
+      this.myCards = myCards
+      this.$apply()
+    }
+    computed = {
+      cashBank() {
+        if (this.selectedCard) {
+          return this.selectedCard.cardName
+        } else {
+          // 默认第一个
+          if (lang.isEmpty(this.myCards)) {
+            return '添加银行卡'
+          } else {
+            return this.myCards[0].cardName
+          }
+        }
+      }
+    }
+    methods = {
+      handleSelectBank() {
+        if (lang.isEmpty(this.myCards)) {
+          wepy.navigateTo({
+            url: '/pages/patient/user/cash/bankAdd'
+          })
+        } else {
+          this.$invoke('zanActionsheet', 'showZanActionsheet', {
+              show: false,
+              closeOnClickOverlay: true,
+              cancelText: false,
+              actions: this.getActionSheetCards()
+            }).then(result => {
+              if (result.type === 'new') {
+                wepy.navigateTo({
+                  url: '/pages/patient/user/cash/bankAdd'
+                })
+                return
+              }
+              const card = this.myCards.find(card => {
+                return card.cardNo === result.type
+              })
+              this.selectedCard = card
+              this.$apply()
+            })
+            .catch(e => {})
+        }
+      },
+      handleGoHistory() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/cash/history'
+        })
+      },
+      async confirm(e) {
+        if (!e.detail.value.cash) {
+          tips.toast('请输入金额', null, 'none')
+          return
+        }
+        // 金额校验
+        if (!validate.money(e.detail.value.cash)) {
+          tips.toast('请输入金额', null, 'none')
+          return
+        }
+        await userService.updateUser({
+          name: e.detail.value.cash
+        })
+        wepy.navigateBack()
+      }
+    }
+    getActionSheetCards() {
+      if (lang.isEmpty(this.myCards)) {
+        return []
+      } else {
+        const arr = this.myCards.map(card => {
+          return {
+            type: card.cardNo,
+            name: card.cardName
+          }
+        })
+        arr.push({
+          type: 'new',
+          name: '使用新卡提现'
+        })
+        return arr
+      }
+    }
+  }
+</script>
+
+<template>
+  <form @submit="confirm">
+    <view>
+      <!-- S 分享 -->
+      <view class='bank-wrap'>
+        <view class='form'>
+          <view class='item' @tap='handleSelectBank'>
+            <text class='tit'>到账银行卡</text>
+            <view class='bd'>
+              <text class='bank-name'>{{cashBank}}</text>
+              <text class='note'>申请提现后，1-2天内到账</text>
+              <text class='iconfont icon-zhankai arrow'></text>
+            </view>
+          </view>
+          <view class='item item-cash'>
+            <text class='tit'>提现金额</text>
+            <view class='bd'>
+              <view class='unit'>￥</view>
+              <input class="weui-input" type='digit' name="cash" maxlength="9" value="{{user.cash}}" />
+            </view>
+          </view>
+        </view>
+        <button type='primary' form-type='submit'>提现申请</button>
+      </view>
+      <!-- E 分享 -->
+      <button type='default' @tap='handleGoHistory'>历 史</button>
+    </view>
+    <zanActionsheet></zanActionsheet>
+  </form>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../../styles/module/m_bank.less');
+  .bd {
+    padding-left: 50rpx;
+  }
+  .unit {
+    position: absolute; // top: 35%;
+    left: 0;
+    font-size: 20px;
+  }
+  .weui-input {
+    height: auto;
+    line-height: 1;
+    min-height: auto;
+  }
+</style>

@@ -1,0 +1,21 @@
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '快速回复'
+    }
+    onLoad() {
+      console.log('this is home page')
+    }
+  }
+</script>
+
+<template>
+  <view>
+    this is patient consult history page
+  </view>
+</template>
+
+<style lang="less" scoped>
+
+</style>

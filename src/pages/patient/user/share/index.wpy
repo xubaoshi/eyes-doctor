@@ -1,0 +1,46 @@
+<script>
+  import wepy from 'wepy'
+  import Qrcode from '@/components/wux/qrcode/qrcode'
+  import userService from '@/api/user'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '推荐给朋友'
+    }
+    async onLoad() {
+      const qrcode = await userService.qrcode()
+      Qrcode.init('qrcode', qrcode);
+    }
+    methods = {
+      handleGoPreview() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/share/preview'
+        })
+      },
+      handleGoMyUser() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/share/myUser'
+        })
+      }
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 分享 -->
+    <view class='share-wrap'>
+      <view class='share-bd'>
+        <canvas class='share-qcode' style="height:200px; width: 200px;" canvas-id="qrcode"></canvas>
+        <text class='share-tit'>我的推荐二维码</text>
+        <text class='share-sub-tit'>你的朋友扫描关注注册成功后成为你发展的用户</text>
+      </view>
+    </view>
+    <!-- E 分享 -->
+    <button type='primary' @tap='handleGoPreview'>预览推荐图片</button>
+    <button type='default' @tap='handleGoMyUser'>我的用户</button>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../../styles/components/c_share.less');
+</style>

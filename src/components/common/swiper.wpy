@@ -1,0 +1,72 @@
+<script>
+  import wepy from 'wepy'
+  export default class ConsultIndex extends wepy.component {
+    props = {
+      bannerUrls: {
+
+      }
+    }
+    data = {
+      swiperCurrent: 0
+    }
+    methods = {
+      swiperChange(e) {
+        this.swiperCurrent = e.detail.current
+        this.$apply()
+      }
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <view class='swiper-container'>
+      <swiper class='swiper' autoplay='true' interval='5000' duration='1000' bindchange="swiperChange" current='{{swiperCurrent}}'>
+        <repeat for='{{bannerUrls}}' key='index'>
+          <swiper-item>
+            <image src='{{item}}' class='slide-image' />
+          </swiper-item>
+        </repeat>
+      </swiper>
+      <view class="dots">
+        <repeat for='{{bannerUrls}}' key='index'>
+          <view class="dot{{index === swiperCurrent ? ' active' : ''}}"></view>
+        </repeat>
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang='less' scoped>
+  .swiper-container {
+    position: relative;
+    margin-bottom: 16rpx;
+    padding: 16rpx;
+    background-color: #ffffff;
+    .swiper {
+      height: 320rpx;
+    }
+    image {
+      width: 100%;
+    }
+    .dots {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 32rpx;
+      display: flex;
+      justify-content: center;
+    }
+    .dot {
+      margin: 0 8rpx;
+      width: 32rpx;
+      height: 5rpx;
+      background: #dddddd;
+      border-radius: 8rpx;
+      transition: all .6s;
+    }
+    .active {
+      background: #ffffff;
+    }
+  }
+</style>

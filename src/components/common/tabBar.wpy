@@ -1,0 +1,64 @@
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.component {
+    props = {
+      tabBars: {
+        twoWay: true
+      }
+    }
+    methods = {
+      handleTabClick(index) {
+        this.$emit('change', index);
+      }
+    }
+  }
+</script>
+
+<template>
+  <view class="tabBar">
+    <repeat for="{{tabBars}}" item="item" key="index">
+      <view class="tabBar-item {{item.current== 1 ? 'current' :''}}" @tap='handleTabClick({{index}})'>
+        <view>
+          <text class='iconfont icon {{item.iconClass}}'></text>
+        </view>
+        <view class="tabBartext">{{item.text}}</view>
+      </view>
+    </repeat>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  .icon {
+    font-size: 40rpx;
+    color: #AAABAD;
+  }
+  .tabBar {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    padding: 10rpx;
+    margin-left: -4rpx;
+    background: #F7F7FA;
+    font-size: 20rpx;
+    color: #8A8A8A;
+    box-shadow: 6rpx 6rpx 6rpx 6rpx #aaa;
+  }
+  .tabBar-item {
+    float: left;
+    width: 25%;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .tabBartext {
+    font-size: 28rpx;
+  }
+  
+  /*当前字体颜色*/
+  .current {
+    .icon,
+    .tabBartext {
+      color: #15C4A6;
+    }
+  }
+</style>

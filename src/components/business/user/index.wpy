@@ -1,0 +1,151 @@
+<script>
+  import wepy from 'wepy'
+  import store from '@/store/utils'
+  import {
+    connect
+  } from 'wepy-redux'
+  @connect({
+    user: store.get('user')
+  })
+  export default class UserIndex extends wepy.component {
+    methods = {
+      handleGoInfo() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/info'
+        })
+      },
+      handleGoIncome() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/income'
+        })
+      },
+      handleGoCash() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/cash/index'
+        })
+      },
+      handleGoConsulter() {
+        wepy.navigateTo({
+          url: '/pages/patient/consult/consulter/list?from=user'
+        })
+      },
+      handleGoShare() {
+        wepy.navigateTo({
+          url: '/pages/patient/user/share/index'
+        })
+      },
+      handleGoService() {}
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 个人信息 -->
+    <view class='user-panel'>
+      <image class='avatar' mode='aspectFill' src='{{user.avatar}}'></image>
+      <text class='txt'>{{user.name}}</text>
+    </view>
+    <!-- E 个人信息 -->
+    <!-- S 表单列表 -->
+    <view class='ui-form'>
+      <view class='field'  @tap='handleGoInfo'>
+        <view class='field-icon orange'>
+          <text class='iconfont  icon-renminbi '></text>
+        </view>
+        <text class='field-tit'>我的账户</text>
+        <view class='field-tail'>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+      <view class='field' @tap='handleGoIncome'>
+        <view class='field-icon blue'>
+          <text class='iconfont  icon-shouru '></text>
+        </view>
+        <text class='field-tit'>收入明细</text>
+        <view class='field-tail'>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+      <view class='field' @tap='handleGoCash'>
+        <view class='field-icon orange'>
+          <text class='iconfont  icon-qianbao '></text>
+        </view>
+        <text class='field-tit'>提现</text>
+        <view class='field-tail'>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+    </view>
+    <!-- E 表单 -->
+    <!-- S 表单列表 -->
+    <view class='ui-form'>
+      <view class='field' @tap='handleGoConsulter'>
+        <view class='field-icon green'>
+          <text class='iconfont  icon-wode-active '></text>
+        </view>
+        <text class='field-tit'>咨询人信息</text>
+        <view class='field-tail'>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+    </view>
+    <!-- E 表单 -->
+    <!-- S 表单列表 -->
+    <view class='ui-form'>
+      <view class='field' @tap='handleGoShare'>
+        <view class='field-icon blue'>
+          <text class='iconfont  icon-changjingtuijianpitchon '></text>
+        </view>
+        <text class='field-tit'>推荐给朋友</text>
+        <view class='field-tail'>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+    </view>
+    <!-- E 表单 -->
+    <!-- S 表单列表 -->
+    <view class='ui-form'>
+      <view class='field'>
+        <view class='field-icon gray' @tap='handleGoService'>
+          <text class='iconfont  icon-htmal5icon31 '></text>
+        </view>
+        <text class='field-tit'>在线客服</text>
+        <view class='field-tail'>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
+      <!-- /field -->
+    </view>
+    <!-- E 表单 -->
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../styles/ui/ui_form.less');
+  page {
+    padding-bottom: 0;
+  }
+  .user-panel {
+    margin-bottom: 20rpx;
+    padding: 50rpx 30rpx;
+    background-color: #15C4A6;
+    box-sizing: border-box;
+    .avatar {
+      width: 120rpx;
+      height: 120rpx;
+      margin-right: 20rpx;
+      border-radius: 50%;
+      vertical-align: middle;
+    }
+    .txt {
+      font-size: 38rpx;
+      color: #fff;
+    }
+  }
+</style>

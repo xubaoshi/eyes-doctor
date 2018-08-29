@@ -1,0 +1,58 @@
+<script>
+  import wepy from 'wepy'
+  import {
+    connect
+  } from 'wepy-redux'
+  import store from '@/store/utils'
+  @connect({
+    consult: store.get('consult')
+  })
+  export default class ConsultIndex extends wepy.component {
+    methods = {
+      handleGoHis() {
+        wepy.navigateTo({
+          url: '/pages/patient/consult/history'
+        })
+      },
+      handleGoConsult(item) {
+        wepy.navigateTo({
+          url: `/pages/patient/consult/detail?doctorId=${item.doctorId}&isCurent=true`
+        })
+      }
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 咨询部分 -->
+    <view class='cst-lst'>
+      <view class='cst-top'>
+        当前咨询
+        <text class='cst-more' @tap='handleGoHis'>历史记录 <text class='iconfont  icon-zhankai arrow'></text></text>
+      </view>
+      <!-- 循环.cst-item -->
+      <repeat for='{{consult}}'>
+        <view class='cst-item' @tap='handleGoConsult({{item}})'>
+          <view class='cst-bd'>
+            <image class='cst-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+            <view class='cst-info'>
+              <view class='cst-info-bd'>
+                <text class='cst-name'>{{item.name}}</text>
+                <text class='cst-status'>{{item.status}}</text>
+                <text class='cst-date'>{{item.dateFormat}}</text>
+              </view>
+              <view class='cst-txt'>{{item.content}}</view>
+            </view>
+          </view>
+        </view>
+      </repeat>
+    </view>
+    <!-- E 咨询部分 -->
+  </view>
+</template>
+
+
+<style lang="less" scoped>
+  @import url('../../../styles/components/consult.less');
+</style>

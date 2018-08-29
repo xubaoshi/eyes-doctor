@@ -1,0 +1,15 @@
+{
+	"description": "love eyes",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"appid": "wxd5068539245e8fee",
+	"projectname": "eyes-doctor",
+	"miniprogramRoot": "./dist",
+	"condition": {}
+}

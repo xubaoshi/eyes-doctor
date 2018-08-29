@@ -1,0 +1,103 @@
+<script>
+  import wepy from 'wepy'
+  import store from '@/store/utils'
+  import authService from '@/api/auth'
+  import homeService from '@/api/home'
+  import consultService from '@/api/consult'
+  import userService from '@/api/user'
+  import base from '@/mixins/base'
+  import tabBar from '@/components/common/tabBar'
+  import home from '@/components/business/home/index'
+  import consult from '@/components/business/consult/index'
+  import user from '@/components/business/user/index'
+  export default class Index extends wepy.page {
+    components = {
+      tabBar,
+      home,
+      consult,
+      user
+    }
+    data = {
+      currentIndex: 0,
+      tabBars: [{
+        current: 1,
+        pagePath: '/pages/patient/home/index',
+        iconClass: 'icon-shouye',
+        text: '爱眼康'
+      }, {
+        current: 0,
+        pagePath: '/pages/patient/consult/index',
+        iconClass: 'icon-zaixianzixun',
+        text: '我的咨询'
+      }, {
+        current: 0,
+        pagePath: '/pages/patient/home/index',
+        iconClass: 'icon-shangcheng2',
+        isOutFlag: 1,
+        text: '在线商城'
+      }, {
+        current: 0,
+        pagePath: '/pages/patient/user/index',
+        iconClass: 'icon-wode-active',
+        text: '个人中心'
+      }]
+    }
+    async onLoad(e) {
+      if (e.currentIndex) {
+        const currentIndex = parseInt(e.currentIndex)
+        this.currentIndex = currentIndex
+        this.tabBars.forEach((item, index) => {
+          if (currentIndex === index) {
+            item.current = 1
+          } else {
+            item.current = 0
+          }
+        })
+        this.$apply()
+      }
+      // 登录检查
+      await authService.login()
+      // 初始化状态
+      await store.init()
+      // 获取 banner
+      // 获取 患者评价
+      await homeService.info()
+      consultService.list()
+      userService.info()
+    }
+    methods = {
+      handleTabChange(currentIndex) {
+        this.tabBars.forEach((item, index) => {
+          if (currentIndex === index) {
+            item.current = 1
+          } else {
+            item.current = 0
+          }
+        })
+        this.currentIndex = currentIndex
+        this.$apply()
+      }
+    }
+    mixins = [base]
+    config = {
+      navigationBarTitleText: '爱眼康'
+    }
+  }
+</script>
+
+<template>
+  <view class='container'>
+    <home wx:if='{{currentIndex === 0}}' />
+    <consult wx:elif='{{currentIndex === 1}}' />
+    <home wx:elif='{{currentIndex === 2}}' />
+    <user wx:elif='{{currentIndex === 3}}' />
+    <home wx:else='{{currentIndex === 0}}' />
+    <tabBar :tabBars.sync='tabBars' @change.user='handleTabChange' />
+  </view>
+</template>
+
+<style lang="less" scoped>
+  .container {
+    margin-bottom: 120rpx;
+  }
+</style>

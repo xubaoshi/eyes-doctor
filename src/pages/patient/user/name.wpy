@@ -1,0 +1,60 @@
+<script>
+  import wepy from 'wepy'
+  import store from '@/store/utils'
+  import {
+    connect
+  } from 'wepy-redux'
+  import tips from '@/utils/tips'
+  import userService from '@/api/user'
+  @connect({
+    user: store.get('user')
+  })
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '修改昵称'
+    }
+    methods = {
+      async confirm(e) {
+        if (!e.detail.value.name) {
+          tips.toast('请输入昵称', null, 'none')
+          return
+        }
+        await userService.updateUser({
+          name: e.detail.value.name
+        })
+        wepy.navigateBack()
+      }
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 表单列表 -->
+    <view class="container">
+      <form @submit="confirm">
+        <view class="weui-cells-form">
+          <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+              <view class="weui-label">昵称</view>
+            </view>
+            <view class="weui-cell__bd">
+              <input class="weui-input" name="name" placeholder="请输入昵称" maxlength="5" value="{{user.name}}" />
+            </view>
+          </view>
+        </view>
+        <!-- E 表单 -->
+        <button type='primary' form-type='submit'>保 存</button>
+      </form>
+    </view>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  .container {
+    background-color: #f5f5f5;
+  }
+  .weui-cells-form {
+    background-color: #ffffff;
+  }
+</style>

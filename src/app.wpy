@@ -1,0 +1,144 @@
+<style lang="less" src="./styles/weui.less">
+
+</style>
+
+<style lang="less" src="./styles/base.less">
+
+</style>
+
+<style lang="less" src="./styles/icons.less">
+
+</style>
+
+<script>
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  import {
+    setStore
+  } from 'wepy-redux'
+  import configStore from './store'
+  import wxUtil from '@/utils/wx'
+  const store = configStore()
+  setStore(store)
+  export default class extends wepy.app {
+    globalData = {
+      auth: {},
+      scene: null
+    }
+    config = {
+      pages: [
+        'pages/patient/index',
+        // ================================
+        // consult
+        'pages/patient/consult/add',
+        'pages/patient/consult/evaluate',
+        'pages/patient/consult/detail',
+        'pages/patient/consult/reply',
+        'pages/patient/consult/history',
+        'pages/patient/consult/consulter/list',
+        'pages/patient/consult/consulter/add',
+        // ================================
+        // doctor
+        'pages/patient/doctor/detail',
+        'pages/patient/doctor/evalateList',
+        'pages/patient/doctor/index',
+        // ================================
+        // user
+        'pages/patient/user/name',
+        'pages/patient/user/income',
+        'pages/patient/user/info',
+        'pages/patient/user/share/myUser',
+        'pages/patient/user/share/index',
+        'pages/patient/user/cash/bankAdd',
+        'pages/patient/user/cash/index',
+        'pages/patient/user/cash/history',
+        'pages/patient/consult/pay',
+        'pages/patient/user/share/preview'
+        // ================================
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#f8f8f8',
+        navigationBarTitleText: '爱眼康',
+        navigationBarTextStyle: 'black',
+        backgroundColor: '#f7f7fA'
+      }
+    }
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+      // 请求添加 header
+      this.intercept('request', {
+        config(p) {
+          p.header = this.createAuthHeader()
+          p.header['content-type'] = 'application/json'
+          return p;
+        }
+      })
+      // 上传附件添加 header
+      this.intercept('uploadFile', {
+        config(p) {
+          p.header = this.createAuthHeader()
+          return p
+        },
+        success(p) {
+          return p.data
+        }
+      })
+    }
+    createAuthHeader() {
+      const loginCode = wepy.$instance.globalData.auth.login_code
+      const header = {}
+      if (loginCode) {
+        header['login_code'] = loginCode
+      }
+      return header
+    }
+    onLaunch(param) {
+      // 检查微信版本
+      wxUtil.checkSDK()
+      // 获取第三方平台自定义的数据字段的同步接口
+      const ext = wepy.getExtConfigSync()
+      console.log('[ext init ext data]', ext)
+      if (ext.globalConfig) {
+        console.log('[ext] init ext global config data', ext.globalConfig)
+        Object.assign(ext, ext.globalConfig)
+      }
+      Object.assign(wepy.$instance.globalData, ext)
+      // 同步权限数据
+      this.syncStoreConfig('login_code')
+      this.syncStoreConfig('third_session')
+      this.syncStoreConfig('user')
+      // 获取保存场景值
+      if (param && param.scene) {
+        console.info('[scene]onLaunch scene', param.scene)
+        wepy.$instance.globalData.scene = param.scene
+        console.info('[scene]onLaunch end')
+      }
+    }
+    syncStoreConfig(key) {
+      try {
+        const value = wepy.getStorageSync(key)
+        if (value !== '') {
+          console.log(`[auth]${key} sync success`)
+          wepy.$instance.globalData.auth[key] = value
+        }
+      } catch (e) {
+        console.warn(`[auth]${key} sync fail `)
+      }
+    }
+    getUserInfo(cb) {
+      const that = this
+      if (this.globalData.userInfo) {
+        return this.globalData.userInfo
+      }
+      wepy.getUserInfo({
+        success(res) {
+          that.globalData.userInfo = res.userInfo
+          cb && cb(res.userInfo)
+        }
+      })
+    }
+  }
+</script>

@@ -1,0 +1,74 @@
+<script>
+import wepy from 'wepy'
+import { citysWithAll as citys } from '@/config'
+export default class ConsultIndex extends wepy.component {
+  props = {
+    target: {
+      twoWay: true
+    }
+  }
+  data = {
+    select: [0, 0],
+    region: [Object.keys(citys), citys[Object.keys(citys)[0]]],
+    province: '',
+    city: ''
+  }
+  methods = {
+    update(newVal, oldVal) {
+      if (!newVal || newVal.length < 2) return
+      var province = newVal[0]
+      var city = newVal[1]
+      var region = this.region
+      // update province
+      var proIndex = region[0].indexOf(province)
+      if (proIndex < 0) return
+      region = [region[0], citys[province]]
+      // update city
+      var cityIndex = region[1].indexOf(city)
+      if (cityIndex < 0) return
+      this.select = [proIndex, cityIndex]
+      this.region = region
+      this.province = province
+      this.city = city
+      this.$apply()
+    },
+    bindChange(e) {
+      if (!e.detail.value || e.detail.value.length < 2) return
+      var region = this.region
+      var proIndex = e.detail.value[0]
+      var cityIndex = e.detail.value[1]
+      this.province = region[0][proIndex]
+      this.city = region[1][cityIndex]
+      this.notify()
+      this.$apply()
+    },
+    bindColumnChange(e) {
+      if (e.detail.column === 0) {
+        var region = this.region
+        var province = region[0][e.detail.value]
+        this.region = [region[0], citys[province]]
+        this.$apply()
+      }
+    }
+  }
+  notify() {
+    this.$emit(
+      'regionChange',
+      {
+        province: this.province,
+        city: this.city
+      },
+      {}
+    )
+  }
+}
+</script>
+
+<template>
+    <picker mode="multiSelector" value="{{select}}" range="{{region}}" @change="bindChange" @columnchange="bindColumnChange">
+        <slot></slot>
+    </picker>
+</template>
+
+<style lang='less' scoped>
+</style>

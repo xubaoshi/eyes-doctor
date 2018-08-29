@@ -1,0 +1,75 @@
+<script>
+  import wepy from 'wepy'
+  import Qrcode from '@/components/wux/qrcode/qrcode';
+  import store from '@/store/utils'
+  import {
+    connect
+  } from 'wepy-redux'
+  @connect({
+    shareQrcode: store.get('shareQrcode')
+  })
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的推荐图片'
+    }
+    onLoad() {
+      Qrcode.init('qrcode', this.shareQrcode);
+    }
+    methods = {
+      save() {
+        wepy.canvasToTempFilePath({
+          x: 0,
+          y: 0,
+          width: 200,
+          height: 200,
+          destWidth: 200,
+          destHeight: 200,
+          canvasId: 'qrcode'
+        }).then((res) => {
+          wepy.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath
+          })
+        })
+      }
+    }
+  }
+</script>
+
+<template>
+  <view>
+    <!-- S 分享 -->
+    <view class='share-wrap'>
+      <view class='share-bd'>
+        <canvas class='share-qcode' style="height:200px; width: 200px;" canvas-id="qrcode"></canvas>
+        <text class='share-tit'>欢迎加入爱眼康公众号</text>
+        <text class='share-sub-tit'>最专业的眼科咨询中心</text>
+      </view>
+      <view class='share-ft'>
+        <view class='share-ft-item'>
+          <view class='icon-wrap orange'>
+            <text class='iconfont icon-yishengmenzhen'></text>
+          </view>
+          <text class='txt'>100%专业医生</text>
+        </view>
+        <view class='share-ft-item'>
+          <view class='icon-wrap blue'>
+            <text class='iconfont icon-icon_huifu-mian'></text>
+          </view>
+          <text class='txt'>及速的回复</text>
+        </view>
+        <view class='share-ft-item'>
+          <view class='icon-wrap green'>
+            <text class='iconfont icon-shangcheng2'></text>
+          </view>
+          <text class='txt'>你最需要的商品</text>
+        </view>
+      </view>
+    </view>
+    <!-- E 分享 -->
+    <button type='primary' @tap='save'>图片保存</button>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import url('../../../../styles/components/c_share.less');
+</style>
