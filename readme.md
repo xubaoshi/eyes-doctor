@@ -101,41 +101,36 @@ eslint（插件）
     --business
         --consult
           --index.wpy  //咨询标签页首页
-          --radio.wpy  //选择咨询人组件
         --home
           --index.wpy  //爱眼康标签页首页
         --user
           --index.wpy  //个人中心标签页首页
   // 业务页面
   --pages
-    --patient
-        --consult
-            --add.wpy      //快速咨询第一步
-            --pay.wpy      //支付页
-            --history.wpy  //历史记录
-            --evaluate.wpy //评价
-            --detail.wpy   //详情
-            --reply.wpy    //快速回复
-            --consulter
-              --add.wpy    //添加咨询人
-              --list.wpy   //选择咨询人
-        --doctor
-            --index.wpy    //找医生
-            --detail.wpy   //医生详情
-            --evalateList.wpy //医生评价列表
-        --user
-            --info.wpy     //个人信息
-            --name.wpy     //修改昵称
-            --income.wpy   //收入明细
-          --share
-              --index.wpy  //推荐给朋友
-              --myUser.wpy //我发展的用户
-              --preview.wpy//我的推荐图片
-          --cash
-              --index.wpy   //提现页面
-              --bankAdd.wpy //银行添加
-              --history.wpy //提现历史
-      --index.wpy           //首页
+      --login
+        forget.wpy      //找回密码
+        index.wpy       //登录
+      --register
+        info.wpy        //注册第二步(信息填写)
+        index.wpy       //注册第一步(手机号)
+      --consult
+        --evaluate.wpy  //患者评价
+        --add.wpy       //快速回复
+        --history.wpy   //历史记录
+        --detail.wpy    //详情
+      --login
+        --info.wpy      //个人信息
+        --income.wpy    //收入明细
+      --share
+          --index.wpy   //推荐给朋友
+          --myUser.wpy  //我发展的用户
+          --preview.wpy //我的推荐图片
+      --cash
+          --index.wpy   //提现页面
+          --bankAdd.wpy //银行添加
+          --history.wpy //提现历史
+      --index.wpy       //逻辑判断页
+      --home.wpy        //首页
 ```
 
 ## Mock 数据

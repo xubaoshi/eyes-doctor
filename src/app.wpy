@@ -27,24 +27,16 @@
     }
     config = {
       pages: [
+        'pages/home',
         'pages/index',
         // ================================
         // consult
         'pages/consult/add',
         'pages/consult/evaluate',
         'pages/consult/detail',
-        'pages/consult/reply',
         'pages/consult/history',
-        'pages/consult/consulter/list',
-        'pages/consult/consulter/add',
-        // ================================
-        // doctor
-        'pages/doctor/detail',
-        'pages/doctor/evalateList',
-        'pages/doctor/index',
         // ================================
         // user
-        'pages/user/name',
         'pages/user/income',
         'pages/user/info',
         'pages/user/share/myUser',
@@ -52,9 +44,15 @@
         'pages/user/cash/bankAdd',
         'pages/user/cash/index',
         'pages/user/cash/history',
-        'pages/consult/pay',
         'pages/user/share/preview'
         // ================================
+        // login
+        'pages/login/index',
+        'pages/login/forget',
+        // ================================
+        'pages/register/index',
+        'pages/info/forget',
+        // register
       ],
       window: {
         backgroundTextStyle: 'light',
