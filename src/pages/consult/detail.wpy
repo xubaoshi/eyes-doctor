@@ -48,7 +48,7 @@
       },
       handleGoConsultAdd(doctorId) {
         wepy.navigateTo({
-          url: `/pages/patient/consult/add?consultId=${this.consult.id}&isCurent=${this.isCurent}`
+          url: `/pages/consult/add?consultId=${this.consult.id}&isCurent=${this.isCurent}`
         })
       },
       handlePreview(item) {

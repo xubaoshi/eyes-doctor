@@ -47,11 +47,11 @@
         await consultService.add(param)
         if (this.doctorId) {
           wepy.reLaunch({
-            url: '/pages/patient/index?currentIndex=1'
+            url: '/pages/index?currentIndex=1'
           })
         } else {
           wepy.reLaunch({
-            url: '/pages/patient/index'
+            url: '/pages/index'
           })
         }
       }

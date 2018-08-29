@@ -45,17 +45,17 @@
     methods = {
       handleGoCon() {
         wepy.navigateTo({
-          url: '/pages/patient/consult/add'
+          url: '/pages/consult/add'
         })
       },
       handleGoDoc() {
         wepy.navigateTo({
-          url: '/pages/patient/doctor/index'
+          url: '/pages/doctor/index'
         })
       },
       handleGoAllEval() {
         wepy.navigateTo({
-          url: '/pages/patient/doctor/evalateList?type=all'
+          url: '/pages/doctor/evalateList?type=all'
         })
       }
     }

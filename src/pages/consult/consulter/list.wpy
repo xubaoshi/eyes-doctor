@@ -21,7 +21,7 @@
       selectItem: null,
       doctorId: '',
       showRadio: true,
-      path: '/pages/patient/consult/consulter/add'
+      path: '/pages/consult/consulter/add'
     }
     onLoad(e) {
       // 从医生详情进入 doctorId 随 url 带入
@@ -53,7 +53,7 @@
       next() {
         if (this.selectItem) {
           wepy.navigateTo({
-            url: `/pages/patient/consult/pay?doctorId=${this.doctorId}&userId=${this.selectItem.value}`
+            url: `/pages/consult/pay?doctorId=${this.doctorId}&userId=${this.selectItem.value}`
           })
         } else {
           tips.toast('请选择咨询人', null, 'none')

@@ -47,7 +47,7 @@
       handleSelectBank() {
         if (lang.isEmpty(this.myCards)) {
           wepy.navigateTo({
-            url: '/pages/patient/user/cash/bankAdd'
+            url: '/pages/user/cash/bankAdd'
           })
         } else {
           this.$invoke('zanActionsheet', 'showZanActionsheet', {
@@ -58,7 +58,7 @@
             }).then(result => {
               if (result.type === 'new') {
                 wepy.navigateTo({
-                  url: '/pages/patient/user/cash/bankAdd'
+                  url: '/pages/user/cash/bankAdd'
                 })
                 return
               }
@@ -73,7 +73,7 @@
       },
       handleGoHistory() {
         wepy.navigateTo({
-          url: '/pages/patient/user/cash/history'
+          url: '/pages/user/cash/history'
         })
       },
       async confirm(e) {

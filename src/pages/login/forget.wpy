@@ -2,14 +2,14 @@
   import wepy from 'wepy'
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '爱眼康'
+      navigationBarTitleText: '找回密码'
     }
   }
 </script>
 
 <template>
   <view>
-    this is seller home page
+   找回密码
   </view>
 </template>
 

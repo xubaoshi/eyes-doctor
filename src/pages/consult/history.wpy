@@ -51,12 +51,12 @@
       },
       handleGoEval(item) {
         wepy.navigateTo({
-          url: `/pages/patient/consult/evaluate?doctorId=${item.doctorId}`
+          url: `/pages/consult/evaluate?doctorId=${item.doctorId}`
         })
       },
       handleGoConsult(item) {
         wepy.navigateTo({
-          url: `/pages/patient/consult/add?doctorId=${item.doctorId}`
+          url: `/pages/consult/add?doctorId=${item.doctorId}`
         })
       }
     }

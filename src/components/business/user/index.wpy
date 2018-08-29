@@ -11,27 +11,27 @@
     methods = {
       handleGoInfo() {
         wepy.navigateTo({
-          url: '/pages/patient/user/info'
+          url: '/pages/user/info'
         })
       },
       handleGoIncome() {
         wepy.navigateTo({
-          url: '/pages/patient/user/income'
+          url: '/pages/user/income'
         })
       },
       handleGoCash() {
         wepy.navigateTo({
-          url: '/pages/patient/user/cash/index'
+          url: '/pages/user/cash/index'
         })
       },
       handleGoConsulter() {
         wepy.navigateTo({
-          url: '/pages/patient/consult/consulter/list?from=user'
+          url: '/pages/consult/consulter/list?from=user'
         })
       },
       handleGoShare() {
         wepy.navigateTo({
-          url: '/pages/patient/user/share/index'
+          url: '/pages/user/share/index'
         })
       },
       handleGoService() {}

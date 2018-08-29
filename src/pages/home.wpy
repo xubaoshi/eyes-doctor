@@ -21,23 +21,23 @@
       currentIndex: 0,
       tabBars: [{
         current: 1,
-        pagePath: '/pages/patient/home/index',
+        pagePath: '/pages/home/index',
         iconClass: 'icon-shouye',
         text: '爱眼康'
       }, {
         current: 0,
-        pagePath: '/pages/patient/consult/index',
+        pagePath: '/pages/consult/index',
         iconClass: 'icon-zaixianzixun',
         text: '我的咨询'
       }, {
         current: 0,
-        pagePath: '/pages/patient/home/index',
+        pagePath: '/pages/home/index',
         iconClass: 'icon-shangcheng2',
         isOutFlag: 1,
         text: '在线商城'
       }, {
         current: 0,
-        pagePath: '/pages/patient/user/index',
+        pagePath: '/pages/user/index',
         iconClass: 'icon-wode-active',
         text: '个人中心'
       }]

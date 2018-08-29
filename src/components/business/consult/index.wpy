@@ -11,12 +11,12 @@
     methods = {
       handleGoHis() {
         wepy.navigateTo({
-          url: '/pages/patient/consult/history'
+          url: '/pages/consult/history'
         })
       },
       handleGoConsult(item) {
         wepy.navigateTo({
-          url: `/pages/patient/consult/detail?doctorId=${item.doctorId}&isCurent=true`
+          url: `/pages/consult/detail?doctorId=${item.doctorId}&isCurent=true`
         })
       }
     }

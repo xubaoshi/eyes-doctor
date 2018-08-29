@@ -13,12 +13,12 @@
     methods = {
       handleGoPreview() {
         wepy.navigateTo({
-          url: '/pages/patient/user/share/preview'
+          url: '/pages/user/share/preview'
         })
       },
       handleGoMyUser() {
         wepy.navigateTo({
-          url: '/pages/patient/user/share/myUser'
+          url: '/pages/user/share/myUser'
         })
       }
     }

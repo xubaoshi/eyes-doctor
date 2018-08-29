@@ -52,11 +52,11 @@
             // 新增咨询
             await consultService.add(param)
             wepy.reLaunch({
-              url: `/pages/patient/index?currentIndex=1`
+              url: `/pages/index?currentIndex=1`
             })
           } else {
             wepy.navigateTo({
-              url: `/pages/patient/consult/consulter/list?doctorId=${this.doctorId}`
+              url: `/pages/consult/consulter/list?doctorId=${this.doctorId}`
             })
           }
         }

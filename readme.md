@@ -80,7 +80,6 @@ eslint（插件）
 ``` javascript
     config = {
       pages: [
-        'pages/patient/index',
         'pages/index',
         'pages/doctor/index',
         'pages/seller/index'
