@@ -71,5 +71,5 @@
 </template>
 
 <style lang="less" scoped>
-  @import url('../../../../styles/components/c_share.less');
+  @import url('../../../styles/components/c_share.less');
 </style>

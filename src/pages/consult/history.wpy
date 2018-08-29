@@ -93,5 +93,5 @@
 </template>
 
 <style lang="less" scoped>
-  @import url('../../../styles/components/consult.less');
+  @import url('../../styles/components/consult.less');
 </style>

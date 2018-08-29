@@ -44,14 +44,14 @@
         'pages/user/cash/bankAdd',
         'pages/user/cash/index',
         'pages/user/cash/history',
-        'pages/user/share/preview'
+        'pages/user/share/preview',
         // ================================
         // login
         'pages/login/index',
         'pages/login/forget',
         // ================================
         'pages/register/index',
-        'pages/info/forget',
+        'pages/register/info'
         // register
       ],
       window: {

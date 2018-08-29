@@ -78,5 +78,5 @@
 </template>
 
 <style lang="less" scoped>
-  @import url('../../../styles/components/c_user.less');
+  @import url('../../styles/components/c_user.less');
 </style>

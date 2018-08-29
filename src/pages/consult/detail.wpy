@@ -108,6 +108,6 @@
 </template>
 
 <style lang="less" scoped>
-  @import url('../../../styles/components/doc_profile.less');
-  @import url('../../../styles/components/chat.less');
+  @import url('../../styles/components/doc_profile.less');
+  @import url('../../styles/components/chat.less');
 </style>

@@ -144,7 +144,7 @@
 </template>
 
 <style lang="less" scoped>
-  @import url('../../../../styles/module/m_bank.less');
+  @import url('../../../styles/module/m_bank.less');
   .bd {
     padding-left: 50rpx;
   }

@@ -71,5 +71,5 @@
 </template>
 
 <style lang="less" scoped>
-  @import url('../../../../styles/module/m_bank.less');
+  @import url('../../../styles/module/m_bank.less');
 </style>
