@@ -40,7 +40,6 @@
 <style lang='less' scoped>
   .swiper-container {
     position: relative;
-    margin-bottom: 16rpx;
     padding: 16rpx;
     background-color: #ffffff;
     .swiper {

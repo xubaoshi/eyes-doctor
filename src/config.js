@@ -1,11 +1,7 @@
-export const baseUrl = 'https://www.easy-mock.com/mock/5b719f05ebd4a208cce29bb8'
+export const baseUrl = 'https://www.easy-mock.com/mock/5b719f05ebd4a208cce29bb8/doctor'
 
 // 患者接口
 export const patientApi = {
-  evaluate: {
-    list: '/api/evaluate/list', // 患者评价列表接口
-    add: '/api/evaluate/add' // 患者评价新增
-  },
   banner: {
     list: '/api/banner/list' // 首页 banner 列表
   },
@@ -19,19 +15,10 @@ export const patientApi = {
     vedio: '/api/upload/vedio' // 视频上传
   },
   consult: {
-    list: '/api/consult/list', // 我的咨询
+    list: '/api/consult/list', // 我的咨询（咨询大厅）
     history: '/api/consult/history/list', // 历史咨询
     detail: '/api/consult/detail', // 咨询详情（再次咨询）
-    add: '/api/consult/add', // 咨询新增
-    price: '/api/consult/price', // 咨询费用
-    consulter: {
-      list: '/api/consult/consulter/list', // 咨询人列表
-      add: '/api/consult/consulter/add', // 咨询人新增
-      detail: '/api/consult/consulter/detail' // 咨询人新增
-    }
-  },
-  doctor: {
-    list: '/api/doctor/list' // 找医生列表（详情页共用）
+    add: '/api/consult/add'// 咨询新增
   },
   user: {
     info: '/api/user/info', // 个人信息 （个人信息tab页所需数据）

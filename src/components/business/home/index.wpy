@@ -8,7 +8,8 @@
   import store from '@/store/utils'
   @connect({
     home: store.get('home'),
-    evaluate: store.get('evaluate')
+    consultList: store.get('consultList'),
+    myConsultList: store.get('myConsultList')
   })
   export default class ConsultIndex extends wepy.component {
     components = {
@@ -23,36 +24,44 @@
           return this.home.bannerList
         }
       },
-      evaluateList() {
-        if (lang.isEmpty(this.evaluate) || lang.isEmpty(this.evaluate.list)) {
+      myList() {
+        if (lang.isEmpty(this.myConsultList) || lang.isEmpty(this.myConsultList.list)) {
           return []
         } else {
-          if (this.evaluate.list.length > 10) {
-            return this.evaluate.list.slice(0, 10)
+          if (this.myConsultList.list.length > 2) {
+            return this.myConsultList.list.slice(0, 2)
           } else {
-            return this.evaluate.list
+            return this.myConsultList.list
           }
         }
       },
-      title() {
-        if (lang.isEmpty(this.evaluate) || lang.isEmpty(this.evaluate.list)) {
-          return '患者评价'
+      allList() {
+        if (lang.isEmpty(this.consultList) || lang.isEmpty(this.consultList.list)) {
+          return []
         } else {
-          return `患者评价（${this.evaluate.records}）`
+          if (this.consultList.list.length > 2) {
+            return this.consultList.list.slice(0, 2)
+          } else {
+            return this.consultList.list
+          }
+        }
+      },
+      myTitle() {
+        if (lang.isEmpty(this.myConsultList) || lang.isEmpty(this.myConsultList.list)) {
+          return '我的咨询'
+        } else {
+          return `我的咨询（${this.myConsultList.records}）`
+        }
+      },
+      allTitle() {
+        if (lang.isEmpty(this.myConsultList) || lang.isEmpty(this.myConsultList.list)) {
+          return '咨询大厅'
+        } else {
+          return `咨询大厅（${this.myConsultList.records}）`
         }
       }
     }
     methods = {
-      handleGoCon() {
-        wepy.navigateTo({
-          url: '/pages/consult/add'
-        })
-      },
-      handleGoDoc() {
-        wepy.navigateTo({
-          url: '/pages/doctor/index'
-        })
-      },
       handleGoAllEval() {
         wepy.navigateTo({
           url: '/pages/doctor/evalateList?type=all'
@@ -65,52 +74,55 @@
 <template>
   <view>
     <customSwiper :bannerUrls.sync='bannerUrls' />
-    <!-- S 快捷入口 -->
-    <view class='quick-list'>
-      <view class='quick-item' @tap='handleGoCon'>
-        <view class='item-icon bk-g'>
-          <text class='iconfont  icon-zixun'></text>
-        </view>
-        <view class='item-des'>
-          <view class='item-tit txt'>快速咨询</view>
-          <view class='item-tit-sub txt'>专业眼科医生为您答疑解惑</view>
-        </view>
-        <text class='iconfont  icon-zhankai arrow'></text>
-      </view>
-      <view class='quick-item' @tap='handleGoDoc'>
-        <view class='item-icon bk-y'>
-          <text class='iconfont icon-search-2-copy'></text>
-        </view>
-        <view class='item-des'>
-          <view class='item-tit txt'>找医生</view>
-          <view class='item-tit-sub txt'>搜索全国眼科名医 对症咨询</view>
-        </view>
-        <text class='iconfont  icon-zhankai arrow'></text>
-      </view>
-    </view>
     <!-- E 快捷入口 -->
     <!-- S 评价部分 -->
     <view class='cmt-wrap'>
       <view class='cmt-top'>
-        {{title}}
-        <text class='cmt-more' @tap='handleGoAllEval'>查看全部 <text class='iconfont  icon-zhankai arrow'></text></text>
+        {{myTitle}}
+        <text class='cmt-more' @tap='handleGoAllEval'>更多 <text class='iconfont  icon-zhankai arrow'></text></text>
       </view>
       <!-- /评价顶部 -->
       <view class='cmt-lst'>
         <!-- /评价列表项，循环 -->
-        <repeat for='{{evaluateList}}' item='item'>
+        <repeat for='{{myList}}' item='item'>
           <view class='cmt-item'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
-              <text class='cmt-author'>{{item.userName}}</text>
-              <text class='cmt-eval'>{{item.eval}}</text>
-              <text class='cmt-date'>{{item.dateFormat}}</text>
+              <text class='cmt-author'>{{item.name}}</text>
+              <text class='cmt-date'>咨询费 {{item.price}}元</text>
             </view>
             <view class='cmt-bd'>
-              <text class='cmt-doc'>主治医生：{{item.doctorName}}</text>
               <view class='cmt-txt'>
-                {{item.evalContent}}
+                {{item.contentFormat}}
               </view>
+              <text class='cmt-doc'>{{item.dateFormat}}</text>
+            </view>
+          </view>
+        </repeat>
+        <!-- /评价列表项，循环 -->
+      </view>
+      <!-- /评价列表 -->
+    </view>
+    <view class='cmt-wrap'>
+      <view class='cmt-top'>
+        {{allTitle}}
+        <text class='cmt-more' @tap='handleGoAllEval'>更多 <text class='iconfont  icon-zhankai arrow'></text></text>
+      </view>
+      <!-- /评价顶部 -->
+      <view class='cmt-lst'>
+        <!-- /评价列表项，循环 -->
+        <repeat for='{{myList}}' item='item'>
+          <view class='cmt-item'>
+            <view class='cmt-hd'>
+              <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+              <text class='cmt-author'>{{item.name}}</text>
+              <text class='cmt-date'>咨询费 {{item.price}}元</text>
+            </view>
+            <view class='cmt-bd'>
+              <view class='cmt-txt'>
+                {{item.contentFormat}}
+              </view>
+              <text class='cmt-doc'>{{item.dateFormat}}</text>
             </view>
           </view>
         </repeat>

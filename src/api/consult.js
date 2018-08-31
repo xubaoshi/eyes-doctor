@@ -1,17 +1,12 @@
 // 我的咨询
 import base from './base'
 import { patientApi } from '@/config'
-import store from '@/store/utils'
 import lang from '@/utils/lang'
 import Page from '@/utils/page'
 export default class consult extends base {
-  static async list() {
+  static list() {
     const url = `${this.baseUrl}${patientApi.consult.list}`
-    const arr = await this.get(url)
-    arr.forEach(item => {
-      item['dateFormat'] = lang.dateFormat(item.date, 'yyyy-MM-dd')
-    })
-    store.save('consult', arr)
+    return new Page(url, this.processDataBySec.bind(this))
   }
 
   static history() {
@@ -36,5 +31,13 @@ export default class consult extends base {
 
   static processEvalData(item) {
     item['dateFormat'] = lang.dateFormat(item.date, 'yyyy-MM-dd')
+  }
+
+  static processDataBySec(item) {
+    item['dateFormat'] = lang.dateFormat(item.date, 'yyyy-MM-dd hh:mm:ss')
+    item['contentFormat'] =
+      item['content'] && item['content'].length > 45
+        ? `${item['content'].substr(0, 45)}...`
+        : item['content']
   }
 }

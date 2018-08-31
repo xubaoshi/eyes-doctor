@@ -21,6 +21,12 @@ export default class http {
       if (err.errMsg) {
         tips.toast(err.errMsg, null, 'none')
       }
+      // 如果 code 为 2，页面跳转至登录页
+      if (err.serverCode === 2) {
+        wepy.reLaunch({
+          url: 'pages/login/index'
+        })
+      }
       throw err
     }
   }
