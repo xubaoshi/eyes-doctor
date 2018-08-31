@@ -31,12 +31,6 @@
         text: '我的咨询'
       }, {
         current: 0,
-        pagePath: '/pages/home/index',
-        iconClass: 'icon-shangcheng2',
-        isOutFlag: 1,
-        text: '在线商城'
-      }, {
-        current: 0,
         pagePath: '/pages/user/index',
         iconClass: 'icon-wode-active',
         text: '个人中心'
@@ -87,10 +81,9 @@
 
 <template>
   <view class='container'>
-    <home wx:if='{{currentIndex === 0}}' />
+    <home wx:if='{{currentIndex === 0}}' @change.user='handleTabChange' />
     <consult wx:elif='{{currentIndex === 1}}' />
-    <home wx:elif='{{currentIndex === 2}}' />
-    <user wx:elif='{{currentIndex === 3}}' />
+    <user wx:elif='{{currentIndex === 2}}' />
     <home wx:else='{{currentIndex === 0}}' />
     <tabBar :tabBars.sync='tabBars' @change.user='handleTabChange' />
   </view>

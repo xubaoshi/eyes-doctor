@@ -35,6 +35,7 @@
         'pages/consult/evaluate',
         'pages/consult/detail',
         'pages/consult/history',
+        'pages/consult/all',
         // ================================
         // user
         'pages/user/income',

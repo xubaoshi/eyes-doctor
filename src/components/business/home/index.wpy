@@ -62,9 +62,12 @@
       }
     }
     methods = {
-      handleGoAllEval() {
+      handleGoMyList() {
+        this.$emit('change', 1);
+      },
+      handleGoAllList() {
         wepy.navigateTo({
-          url: '/pages/doctor/evalateList?type=all'
+          url: '/pages/consult/all'
         })
       }
     }
@@ -79,7 +82,7 @@
     <view class='cmt-wrap'>
       <view class='cmt-top'>
         {{myTitle}}
-        <text class='cmt-more' @tap='handleGoAllEval'>更多 <text class='iconfont  icon-zhankai arrow'></text></text>
+        <text class='cmt-more' @tap='handleGoMyList'>更多 <text class='iconfont  icon-zhankai arrow'></text></text>
       </view>
       <!-- /评价顶部 -->
       <view class='cmt-lst'>
@@ -106,7 +109,7 @@
     <view class='cmt-wrap'>
       <view class='cmt-top'>
         {{allTitle}}
-        <text class='cmt-more' @tap='handleGoAllEval'>更多 <text class='iconfont  icon-zhankai arrow'></text></text>
+        <text class='cmt-more' @tap='handleGoAllList'>更多 <text class='iconfont  icon-zhankai arrow'></text></text>
       </view>
       <!-- /评价顶部 -->
       <view class='cmt-lst'>
@@ -136,68 +139,4 @@
 
 <style lang='less' scoped>
   @import url('../../../styles/components/comment.less');
-  .quick-list {
-    margin-bottom: 16rpx;
-    background-color: #ffffff;
-    padding-left: 30rpx;
-    border-top: 1rpx solid #e5e5e5;
-    border-bottom: 1rpx solid #e5e5e5;
-    .quick-item {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      padding: 32rpx 0;
-      border-bottom: 1rpx solid #e5e5e5;
-      .item-icon {
-        display: flex;
-        flex-direction: column;
-        margin-right: 32rpx;
-        width: 120rpx;
-        height: 120rpx;
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        .iconfont {
-          font-size: 75rpx;
-          color: #ffffff;
-        }
-      }
-      &:last-child {
-        border-bottom: 0;
-      }
-      .item-des {
-        vertical-align: top;
-        padding-top: 12rpx;
-        .item-tit {
-          font-size: 40rpx;
-          line-height: 56rpx;
-        }
-        .item-tit-sub {
-          display: inline-block;
-          font-size: 28rpx;
-          line-height: 40rpx;
-        }
-      }
-      .arrow {
-        position: absolute;
-        right: 32rpx;
-        bottom: 50%;
-        margin-bottom: -13rpx;
-        font-size: 26rpx;
-        color: #c7c7c7;
-        font-weight: bold;
-      }
-    }
-    .bk-g {
-      background-image: linear-gradient(-180deg, #0ed6c2 0%, #15c4a6 100%);
-    }
-    .bk-y {
-      background-image: linear-gradient(-180deg, #ff9e4d 4%, #fc8e32 100%);
-    }
-    .txt {
-      font-family: PingFangSC-Medium;
-      color: #222222;
-      letter-spacing: 0;
-    }
-  }
 </style>
