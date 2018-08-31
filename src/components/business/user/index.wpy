@@ -24,11 +24,6 @@
           url: '/pages/user/cash/index'
         })
       },
-      handleGoConsulter() {
-        wepy.navigateTo({
-          url: '/pages/consult/consulter/list?from=user'
-        })
-      },
       handleGoShare() {
         wepy.navigateTo({
           url: '/pages/user/share/index'
@@ -74,20 +69,6 @@
           <text class='iconfont  icon-qianbao '></text>
         </view>
         <text class='field-tit'>提现</text>
-        <view class='field-tail'>
-          <text class='iconfont  icon-zhankai arrow'></text>
-        </view>
-      </view>
-      <!-- /field -->
-    </view>
-    <!-- E 表单 -->
-    <!-- S 表单列表 -->
-    <view class='ui-form'>
-      <view class='field' @tap='handleGoConsulter'>
-        <view class='field-icon green'>
-          <text class='iconfont  icon-wode-active '></text>
-        </view>
-        <text class='field-tit'>咨询人信息</text>
         <view class='field-tail'>
           <text class='iconfont  icon-zhankai arrow'></text>
         </view>
