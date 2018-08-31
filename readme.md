@@ -117,6 +117,7 @@ eslint（插件）
         --evaluate.wpy  //患者评价
         --add.wpy       //快速回复
         --history.wpy   //历史记录
+        --all.wpy       //咨询大厅
         --detail.wpy    //详情
       --login
         --info.wpy      //个人信息
