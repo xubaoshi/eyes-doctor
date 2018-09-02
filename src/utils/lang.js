@@ -4,7 +4,9 @@ function isObject(value) {
 }
 
 function isArray(value) {
-  const _isArray = Array.isArray || (_arg => Object.prototype.toString.call(_arg) === '[object Array]')
+  const _isArray =
+    Array.isArray ||
+    (_arg => Object.prototype.toString.call(_arg) === '[object Array]')
   return _isArray(value)
 }
 
@@ -86,5 +88,11 @@ export default class Lang {
       }
     }
     return fmt
+  }
+
+  // 判断是否是手机号
+  static isPhoneNumber(tel) {
+    var reg = /^0?1[3|4|5|6|7|8][0-9]\d{8}$/
+    return reg.test(tel)
   }
 }

@@ -1,15 +1,24 @@
 <script>
   import wepy from 'wepy'
+  import authService from '@/api/auth'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '爱眼康'
     }
-    onLoad() {
-      const loginCode = this.getConfig('login_code')
-      if (loginCode != null && loginCode != '') {
-        wepy.reLaunch({
-          url: '/pages/login/index'
-        })
+    async onLoad() {
+      const loginCode = wepy.getStorageSync('login_code')
+      if (loginCode != null && loginCode !== '') {
+        try {
+          await authService.checkLoginCode(loginCode)
+          wepy.reLaunch({
+            url: '/pages/home'
+          })
+        } catch (e) {
+          console.warn('check login code fial', loginCode)
+          wepy.reLaunch({
+            url: '/pages/login/index'
+          })
+        }
       }
     }
     getConfig(key) {

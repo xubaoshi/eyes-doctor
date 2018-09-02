@@ -1,4 +1,5 @@
-export const baseUrl = 'https://www.easy-mock.com/mock/5b719f05ebd4a208cce29bb8/doctor'
+export const baseUrl =
+  'https://www.easy-mock.com/mock/5b719f05ebd4a208cce29bb8/doctor'
 
 // 患者接口
 export const patientApi = {
@@ -10,6 +11,10 @@ export const patientApi = {
     checkSession: '/api/auth/check_session', // 校验 session 是否生效
     decodeUserinfo: '/api/auth/decode_userinfo' // wepy.getUserInfo() 返回值的解码
   },
+  forget: {
+    updatePassword: '/api/auth/updatePassword',
+    vcode: '/api/auth/vcode'
+  },
   upload: {
     image: '/api/upload/image', // 图片上传
     vedio: '/api/upload/vedio' // 视频上传
@@ -19,7 +24,7 @@ export const patientApi = {
     myList: '/api/consult/myList', // 我的咨询
     history: '/api/consult/history/list', // 历史咨询
     detail: '/api/consult/detail', // 咨询详情（再次咨询）
-    add: '/api/consult/add'// 咨询新增
+    add: '/api/consult/add' // 咨询新增
   },
   user: {
     info: '/api/user/info', // 个人信息 （个人信息tab页所需数据）

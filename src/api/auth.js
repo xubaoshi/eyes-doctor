@@ -78,19 +78,26 @@ export default class auth extends base {
   /**
    * 执行登录操作
    */
-  static async doLogin() {
+  static async doLogin(param) {
     const { code } = await wepy.login()
-    const { third_session, login_code } = await this.session(code)
+    console.log(code)
+    const { third_session, login_code } = await this.session({
+      code: code,
+      password: param.password,
+      phone: param.phone
+    })
     await this.setConfig('login_code', login_code)
     await this.setConfig('third_session', third_session)
-    await this.login()
+    // await this.login()
   }
 
   /**
    * 获取会话
    */
-  static async session(jsCode) {
-    const url = `${this.baseUrl}${patientApi.auth.session}?code=${jsCode}`
+  static async session(param) {
+    const url = `${this.baseUrl}${patientApi.auth.session}?code=${
+      param.code
+    }&password=${param.password}&phone=${param.phone}`
     return await this.get(url)
   }
 
@@ -103,6 +110,22 @@ export default class auth extends base {
     }?login_code=${loginCode}`
     const data = await this.get(url)
     return data.result
+  }
+
+  /**
+   * 获取验证码
+   */
+  static async vcode(param) {
+    const url = `${this.baseUrl}${patientApi.forget.vcode}`
+    return await this.get(url, param)
+  }
+
+  /**
+   * 获取验证码
+   */
+  static async updatePassword(param) {
+    const url = `${this.baseUrl}${patientApi.forget.updatePassword}`
+    return await this.post(url, param)
   }
 
   /**

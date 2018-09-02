@@ -1,18 +1,103 @@
 <script>
   import wepy from 'wepy'
+  import lang from '@/utils/lang'
+  import tips from '@/utils/tips'
+  import authService from '@/api/auth'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '登录'
+    }
+    methods = {
+      async confirm(e) {
+        if (!e.detail.value.phone) {
+          tips.toast('请输入手机号', null, 'none')
+          return
+        }
+        if (!lang.isPhoneNumber(e.detail.value.phone)) {
+          tips.toast('请输入合格的手机号', null, 'none')
+          return
+        }
+        if (!e.detail.value.password) {
+          tips.toast('请输入密码', null, 'none')
+          return
+        }
+        await authService.doLogin({
+          phone: e.detail.value.phone,
+          password: e.detail.value.password
+        })
+        wepy.reLaunch({
+          url: '/pages/home'
+        })
+      },
+      handleGoForget() {
+        wepy.navigateTo({
+          url: '/pages/login/forget'
+        })
+      }
     }
   }
 </script>
 
 <template>
-  <view>
-   登录
+  <view class="container">
+    <view class='tips'>为保证服务顺利进行，请提供您的手机号</view>
+    <form @submit="confirm">
+      <view class="weui-cells-form">
+        <!-- S 持卡人 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='iconfont  icon-shouji icon-gray'></text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='number' name="phone" placeholder="请输入手机号" maxlength="11" />
+          </view>
+        </view>
+        <!-- E 持卡人 -->
+        <!-- S 卡号 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='iconfont  icon-Group- icon-gray'></text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='password' name="password" placeholder="请输入密码" maxlength="8" />
+          </view>
+        </view>
+        <!-- E 卡号 -->
+      </view>
+      <!--操作栏-->
+      <button class="weui-btn" type="primary" form-type="submit">登 录</button>
+      <view class='forget' @tap='handleGoForget'>忘记密码</view>
+    </form>
   </view>
 </template>
 
 <style lang="less" scoped>
-
+  .container {
+    background-color: #f5f5f5;
+  }
+  .weui-cells-form {
+    background-color: #ffffff;
+  }
+  .cell-label {
+    margin-right: 35rpx;
+  }
+  .icon-gray {
+    color: #BFBFBF;
+  }
+  .tips {
+    padding: 15rpx 15rpx 15rpx 30rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 28rpx;
+    color: #888888;
+  }
+  .forget {
+    text-align: center;
+    margin-top: 20rpx;
+    font-size: 28rpx;
+    color: #888888;
+  }
 </style>
