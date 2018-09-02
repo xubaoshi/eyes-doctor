@@ -4,12 +4,15 @@
     config = {
       navigationBarTitleText: '找回密码'
     }
+    onLoad() {
+      console.log('111111111111')
+    }
   }
 </script>
 
 <template>
   <view>
-   找回密码
+    找回密码
   </view>
 </template>
 

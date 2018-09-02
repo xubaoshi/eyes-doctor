@@ -2,7 +2,7 @@
   import wepy from 'wepy'
   import tips from '@/utils/tips'
   import zanRadio from '@/components/business/consult/radio'
-  import evaluateService from '@/api/evaluate'
+  // import evaluateService from '@/api/evaluate'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '评价'
@@ -59,11 +59,11 @@
           tips.toast('请输入评价', null, 'none')
           return
         }
-        await evaluateService.evaluateAdd({
-          content,
-          eval: this.selectItem.relation,
-          doctorId: this.doctorId
-        })
+        // await evaluateService.evaluateAdd({
+        //   content,
+        //   eval: this.selectItem.relation,
+        //   doctorId: this.doctorId
+        // })
         wepy.navigateBack()
       }
     }

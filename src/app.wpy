@@ -27,8 +27,8 @@
     }
     config = {
       pages: [
-        'pages/home',
         'pages/index',
+        'pages/home',
         // ================================
         // consult
         'pages/consult/add',

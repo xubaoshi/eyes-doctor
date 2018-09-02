@@ -19,6 +19,9 @@
     config = {
       navigationBarTitleText: '个人信息'
     }
+    onLoad(){
+      console.log('111111111111')
+    }
     onShow(){
       userService.info()
     }

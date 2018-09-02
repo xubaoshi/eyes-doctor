@@ -4,12 +4,15 @@
     config = {
       navigationBarTitleText: '注册'
     }
+    onLoad() {
+      console.log('111111111111')
+    }
   }
 </script>
 
 <template>
   <view>
-   注册
+    注册
   </view>
 </template>
 

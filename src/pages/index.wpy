@@ -4,15 +4,64 @@
     config = {
       navigationBarTitleText: '爱眼康'
     }
+    onLoad() {
+      const loginCode = this.getConfig('login_code')
+      if (loginCode != null && loginCode != '') {
+        wepy.reLaunch({
+          url: '/pages/login/index'
+        })
+      }
+    }
+    getConfig(key) {
+      return wepy.$instance.globalData.auth[key]
+    }
+    methods = {
+      handleGoLogin() {
+        wepy.navigateTo({
+          url: '/pages/login/index'
+        })
+      },
+      handleGoRegister() {
+        wepy.navigateTo({
+          url: '/pages/register/index'
+        })
+      }
+    }
   }
 </script>
 
 <template>
   <view>
-    this is doctor page
+    <view class='avtar'>
+      <text class='iconfont  icon-qianbao'></text>
+    </view>
+    <view class='tit'>欢迎使用爱眼康咨询平台</view>
+    <view class='sub-tit'>自由执业，从这里开始</view>
+    <button class="weui-btn" type="primary" @tap='handleGoLogin'>手机号登录</button>
+    <button class="weui-btn" type="default" @tap='handleGoRegister'>注册为医生</button>
   </view>
 </template>
 
 <style lang="less" scoped>
-
+  .avtar {
+    margin-top: 100rpx;
+    text-align: center;
+    text {
+      font-size: 250rpx;
+      color: #15C4A6;
+    }
+  }
+  .tit {
+    font-family: PingFangSC-Medium;
+    font-size: 48rpx;
+    color: #5A5F67;
+    text-align: center;
+  }
+  .sub-tit {
+    margin-bottom: 200rpx;
+    font-family: PingFangSC-Light;
+    font-size: 36rpx;
+    color: #A2A6AC;
+    text-align: center;
+  }
 </style>

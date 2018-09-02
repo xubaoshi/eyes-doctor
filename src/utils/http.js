@@ -24,7 +24,7 @@ export default class http {
       // 如果 code 为 2，页面跳转至登录页
       if (err.serverCode === 2) {
         wepy.reLaunch({
-          url: 'pages/login/index'
+          url: '/pages/login/index'
         })
       }
       throw err
