@@ -58,7 +58,7 @@
       },
       handleGoConsult(item) {
         wepy.navigateTo({
-          url: `/pages/consult/add?doctorId=${item.doctorId}`
+          url: `/pages/consult/detail?id=${item.id}`
         })
       }
     }
@@ -69,7 +69,7 @@
   <scroll-view @scrolltolower="bindDownLoad" scroll-y style="height:{{scrollHeight}}px;">
     <view class='cmt-wrap'>
       <view class='cmt-lst'>
-        <repeat for='{{allList}}' item='item'>
+        <repeat for='{{allList}}' item='item' @tap='handleGoConsult({{item}})'>
           <view class='cmt-item'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>

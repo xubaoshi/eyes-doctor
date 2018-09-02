@@ -4,6 +4,11 @@ import { patientApi } from '@/config'
 import lang from '@/utils/lang'
 import Page from '@/utils/page'
 export default class consult extends base {
+  static myList() {
+    const url = `${this.baseUrl}${patientApi.consult.myList}`
+    return new Page(url, this.processDataBySec.bind(this))
+  }
+
   static list() {
     const url = `${this.baseUrl}${patientApi.consult.list}`
     return new Page(url, this.processDataBySec.bind(this))
@@ -11,7 +16,7 @@ export default class consult extends base {
 
   static history() {
     const url = `${this.baseUrl}${patientApi.consult.history}`
-    return new Page(url, this.processEvalData.bind(this))
+    return new Page(url, this.processDataBySec.bind(this))
   }
 
   static async detail(param) {

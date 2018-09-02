@@ -8,7 +8,8 @@
     }
     data = {
       consult: {},
-      doctorId: '',
+      doctorId: null,
+      id: null,
       isCurent: false
     }
     computed = {
@@ -29,6 +30,7 @@
     }
     onLoad(e) {
       this.doctorId = e.doctorId
+      this.id = e.id
       if (e.isCurent) {
         this.isCurent = true
       } else {
@@ -38,7 +40,7 @@
     }
     async onShow() {
       this.consult = await consultService.detail({
-        doctorId: this.doctorId
+        id: this.id
       })
       this.$apply()
     }

@@ -20,11 +20,13 @@
         this.scrollHeight = res.windowHeight + 160
         this.$apply()
       })
-      this.consultList = await consultService.history().next()
+      this.consultList = await consultService.list().next({
+        isAll: true
+      })
       this.$apply()
     }
     computed = {
-      list() {
+      allList() {
         if (lang.isEmpty(this.consultList.list)) {
           return []
         } else {
@@ -43,7 +45,7 @@
         }
         this.isLoading = true
         this.$apply()
-        arr = await consultService.history().next()
+        arr = await consultService.list().next()
         arr.list = this.consultList.list.concat(arr.list)
         this.consultList = arr
         this.isLoading = false
@@ -65,33 +67,29 @@
 
 <template>
   <scroll-view @scrolltolower="bindDownLoad" scroll-y style="height:{{scrollHeight}}px;">
-    <!-- S 咨询部分 -->
-    <view class='cst-lst cst-lst-history'>
-      <!-- 循环.cst-item -->
-      <repeat for='{{list}}'>
-        <view class='cst-item'>
-          <view class='cst-bd'>
-            <image class='cst-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
-            <view class='cst-info'>
-              <view class='cst-info-bd'>
-                <text class='cst-name'>{{item.name}}</text>
-                <text class='cst-date'>{{item.dateFormat}}</text>
+    <view class='cmt-wrap'>
+      <view class='cmt-lst'>
+        <repeat for='{{allList}}' item='item'>
+          <view class='cmt-item'>
+            <view class='cmt-hd'>
+              <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
+              <text class='cmt-author'>{{item.name}}</text>
+              <text class='cmt-date'>咨询费 {{item.price}}元</text>
+            </view>
+            <view class='cmt-bd'>
+              <view class='cmt-txt'>
+                {{item.contentFormat}}
               </view>
-              <view class='cst-txt'>{{item.content}}</view>
+              <text class='cmt-doc'>{{item.dateFormat}}</text>
             </view>
           </view>
-          <view class='cst-ft'>
-            <text wx:if="{{item.status === '0'}}" @tap='handleGoEval({{item}})' class='cst-ft-lnk cst-ft-lnk-primary'>评价</text>
-            <text wx:else="{{item.status === '1'}}" @tap='handleGoConsult({{item}})' class='cst-ft-lnk'>再次咨询</text>
-          </view>
-        </view>
-      </repeat>
+        </repeat>
+      </view>
     </view>
-    <!-- E 咨询部分 -->
     <zanLoadmore :loading.sync="isLoading"> </zanLoadmore>
   </scroll-view>
 </template>
 
 <style lang="less" scoped>
-  @import url('../../styles/components/consult.less');
+  @import url('../../styles/components/comment.less');
 </style>

@@ -70,6 +70,10 @@
         })
         this.currentIndex = currentIndex
         this.$apply()
+        // 重置我的咨询
+        if (currentIndex === 0) {
+          this.$invoke('consult', 'initConsult')
+        }
       }
     }
     mixins = [base]

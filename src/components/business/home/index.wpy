@@ -69,6 +69,11 @@
         wepy.navigateTo({
           url: '/pages/consult/all'
         })
+      },
+      handleGoConsult(item) {
+        wepy.navigateTo({
+          url: `/pages/consult/detail?id=${item.id}`
+        })
       }
     }
   }
@@ -88,7 +93,7 @@
       <view class='cmt-lst'>
         <!-- /评价列表项，循环 -->
         <repeat for='{{myList}}' item='item'>
-          <view class='cmt-item'>
+          <view class='cmt-item' @tap='handleGoConsult({item})'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
               <text class='cmt-author'>{{item.name}}</text>
@@ -115,7 +120,7 @@
       <view class='cmt-lst'>
         <!-- /评价列表项，循环 -->
         <repeat for='{{myList}}' item='item'>
-          <view class='cmt-item'>
+          <view class='cmt-item' @tap='handleGoConsult({item})'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
               <text class='cmt-author'>{{item.name}}</text>

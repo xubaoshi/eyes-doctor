@@ -44,16 +44,11 @@
         }
         this.isLoading = true
         this.$apply()
-        arr = await consultService.list().next()
+        arr = await consultService.myList().next()
         arr.list = this.myConsultList.list.concat(arr.list)
         store.save('myConsultList', arr)
         this.isLoading = false
         this.$apply()
-      },
-      handleGoEval(item) {
-        wepy.navigateTo({
-          url: `/pages/consult/evaluate?doctorId=${item.doctorId}`
-        })
       },
       handleGoHis() {
         wepy.navigateTo({
@@ -62,8 +57,17 @@
       },
       handleGoConsult(item) {
         wepy.navigateTo({
-          url: `/pages/consult/detail`
+          url: `/pages/consult/detail?id=${item.id}`
         })
+      }
+    }
+    initConsult() {
+      if (lang.isNotEmpty(this.myConsultList) && this.myConsultList.list.length > 10) {
+        const myConsultList = this.myConsultList
+        myConsultList.pageNo = 1
+        myConsultList.list.splice(10, myConsultList.list.length - 1)
+        // 初始化列表
+        store.save('myConsultList', JSON.parse(JSON.stringify(myConsultList)))
       }
     }
   }
@@ -78,7 +82,7 @@
           <text class='cst-more' @tap='handleGoHis'>历史记录 <text class='iconfont  icon-zhankai arrow'></text></text>
         </view>
         <repeat for='{{allList}}' item='item'>
-          <view class='cmt-item'>
+          <view class='cmt-item' @tap='handleGoConsult({item})'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
               <text class='cmt-author'>{{item.name}}</text>
@@ -99,7 +103,7 @@
 </template>
 
 <style lang="less" scoped>
-    @import url('../../../styles/components/comment.less');
+  @import url('../../../styles/components/comment.less');
   .cst-top {
     height: 80rpx;
     line-height: 80rpx;

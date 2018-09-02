@@ -8,8 +8,8 @@ export default class home extends base {
   static async info() {
     return Promise.all([
       this.bannerList(),
-      consult.list().next({ isAll: false }),
-      consult.list().next({ isAll: true })
+      consult.myList().next(),
+      consult.list().next()
     ]).then(([bannerList, myConsultList, consultList]) => {
       store.save('home', {
         bannerList
