@@ -113,6 +113,7 @@ eslint（插件）
       --register
         info.wpy        //注册第二步(信息填写)
         index.wpy       //注册第一步(手机号)
+        hospital.wpy    //选择医院
       --consult
         --evaluate.wpy  //患者评价
         --add.wpy       //快速回复
