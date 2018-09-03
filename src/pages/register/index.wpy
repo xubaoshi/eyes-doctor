@@ -66,8 +66,8 @@
           code: e.detail.value.code,
           password: e.detail.value.passwordOne
         })
-        wepy.reLaunch({
-          url: '/pages/login/index'
+        wepy.redirectTo({
+          url: '/pages/register/info'
         })
       }
     }
