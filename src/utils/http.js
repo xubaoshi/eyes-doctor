@@ -52,9 +52,9 @@ export default class http {
     error.statusCode = res.statusCode
     const wxData = res.data
     const serverData = wxData.data
-    if (serverData) {
+    if (wxData) {
       error.serverCode = wxData.code
-      error.message = serverData.message
+      error.errMsg = wxData.errMsg
       error.serverData = serverData
     }
     return error

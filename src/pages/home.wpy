@@ -1,7 +1,7 @@
 <script>
   import wepy from 'wepy'
   import store from '@/store/utils'
-  import authService from '@/api/auth'
+  // import authService from '@/api/auth'
   import homeService from '@/api/home'
   import consultService from '@/api/consult'
   import userService from '@/api/user'

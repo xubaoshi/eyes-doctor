@@ -129,6 +129,22 @@ export default class auth extends base {
   }
 
   /**
+   * 获取验证码
+   */
+  static async register(param) {
+    const url = `${this.baseUrl}${patientApi.register.register}`
+    return await this.post(url, param)
+  }
+
+  /**
+   * 获取验证码
+   */
+  static async registerInfo(param) {
+    const url = `${this.baseUrl}${patientApi.register.info}`
+    return await this.post(url, param)
+  }
+
+  /**
    * 设置权限值
    */
   static getConfig(key) {

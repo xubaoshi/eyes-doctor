@@ -1,21 +1,186 @@
 <script>
   import wepy from 'wepy'
+  import lang from '@/utils/lang'
+  import tips from '@/utils/tips'
+  import authService from '@/api/auth'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '注册'
     }
-    onLoad() {
-      console.log('111111111111')
+    data = {
+      phone: null,
+      beginTime: new Date(),
+      btnLabel: '获取验证码',
+      countDown: 60,
+      btnMessage: '',
+      showbtn: true
+    }
+    methods = {
+      getPhone(e) {
+        this.phone = e.detail.value
+        this.$apply()
+      },
+      async getVCode() {
+        if (!this.phone) {
+          tips.toast('请输入手机号', null, 'none')
+          return
+        }
+        if (!lang.isPhoneNumber(this.phone)) {
+          tips.toast('请输入合格的手机号', null, 'none')
+          return
+        }
+        await authService.vcode({
+          phone: this.phone
+        })
+        this.beginTime = new Date()
+        this.$apply()
+        this.hideBtn()
+      },
+      async confirm(e) {
+        if (!e.detail.value.phone) {
+          tips.toast('请输入手机号', null, 'none')
+          return
+        }
+        if (!lang.isPhoneNumber(e.detail.value.phone)) {
+          tips.toast('请输入合格的手机号', null, 'none')
+          return
+        }
+        if (!e.detail.value.code) {
+          tips.toast('请输入验证码', null, 'none')
+          return
+        }
+        if (!e.detail.value.passwordOne) {
+          tips.toast('设置新密码', null, 'none')
+          return
+        }
+        if (!e.detail.value.passwordTwo) {
+          tips.toast('确认密码', null, 'none')
+          return
+        }
+        if (e.detail.value.passwordOne !== e.detail.value.passwordTwo) {
+          tips.toast('密码不一致', null, 'none')
+          return
+        }
+        await authService.register({
+          phone: e.detail.value.phone,
+          code: e.detail.value.code,
+          password: e.detail.value.passwordOne
+        })
+        wepy.reLaunch({
+          url: '/pages/login/index'
+        })
+      }
+    }
+    hideBtn() {
+      const currentDate = new Date()
+      const countDown = Math.floor((currentDate.getTime() - this.beginTime.getTime()) / 1000)
+      if (countDown >= 60) {
+        this.showbtn = true
+        this.btnMessage = ''
+        this.btnLabel = '重新获取'
+      } else {
+        this.showbtn = false
+        this.btnMessage = `${60 - countDown}秒`
+        if (this.setTimeoutFn) {
+          clearTimeout(this.setTimeoutFn)
+        }
+        this.setTimeoutFn = setTimeout(() => {
+          this.hideBtn()
+        }, 1000)
+      }
+      this.$apply()
+    }
+    onUnload() {
+      clearTimeout(this.setTimeoutFn)
     }
   }
 </script>
 
 <template>
-  <view>
-    注册
+  <view class="container">
+    <view class='tips'></view>
+    <form @submit="confirm">
+      <view class="weui-cells-form">
+        <!-- S 手机号 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='iconfont  icon-shouji icon-gray'></text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='number' name="phone" @input="getPhone" placeholder="请输入注册手机号" maxlength="11" />
+          </view>
+        </view>
+        <!-- E 手机号 -->
+        <!-- S 验证码 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='iconfont  icon-2yanzhengma icon-gray'></text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='number' name="code" placeholder="请输入验证码" maxlength="6" />
+          </view>
+          <view class="weui-cell__ft">
+            <view class='code-btn' wx:if='{{showbtn}}' @tap='getVCode'>{{btnLabel}}</view>
+            <view class='code-btn' wx:else>{{btnMessage}}</view>
+          </view>
+        </view>
+        <!-- E 验证码 -->
+        <!-- S 密码 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class=' cell-label '>
+              <text class='iconfont icon-Group- icon-gray '></text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='password' name="passwordOne" placeholder="设置密码" maxlength="8" />
+          </view>
+        </view>
+        <!-- E 密码 -->
+        <!-- S 密码 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class='cell-label '>
+              <text class='iconfont icon-Group- icon-gray '></text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='password' name="passwordTwo" placeholder="确认密码" maxlength="8" />
+          </view>
+        </view>
+        <!-- E 密码 -->
+      </view>
+      <!--操作栏-->
+      <button class="weui-btn" type="primary" form-type="submit">立即注册</button>
+    </form>
   </view>
 </template>
 
 <style lang="less" scoped>
-
+  .container {
+    background-color: #f5f5f5;
+  }
+  .weui-cells-form {
+    background-color: #ffffff;
+  }
+  .cell-label {
+    margin-right: 35rpx;
+  }
+  .icon-gray {
+    color: #BFBFBF;
+  }
+  .tips {
+    padding: 15rpx 15rpx 15rpx 30rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 28rpx;
+    color: #888888;
+  }
+  .code-btn {
+    padding-left: 10rpx;
+    color: #15C4A6;
+  }
 </style>

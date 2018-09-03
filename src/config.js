@@ -15,6 +15,10 @@ export const patientApi = {
     updatePassword: '/api/auth/updatePassword',
     vcode: '/api/auth/vcode'
   },
+  register: {
+    register: '/api/auth/register',
+    info: '/api/auth/info'
+  },
   upload: {
     image: '/api/upload/image', // 图片上传
     vedio: '/api/upload/vedio' // 视频上传
