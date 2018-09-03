@@ -12,12 +12,15 @@ export const patientApi = {
     decodeUserinfo: '/api/auth/decode_userinfo' // wepy.getUserInfo() 返回值的解码
   },
   forget: {
-    updatePassword: '/api/auth/updatePassword',
-    vcode: '/api/auth/vcode'
+    updatePassword: '/api/auth/updatePassword',  // 更新密码
+    vcode: '/api/auth/vcode'  // 验证码
   },
   register: {
-    register: '/api/auth/register',
-    info: '/api/auth/info'
+    register: '/api/auth/register',  // 立即注册
+    info: '/api/auth/info',  // 完善信息
+    hospital: '/api/auth/hospital', // 医院
+    title: '/api/auth/title', // 职称
+    office: '/api/auth/office' // 科室
   },
   upload: {
     image: '/api/upload/image', // 图片上传

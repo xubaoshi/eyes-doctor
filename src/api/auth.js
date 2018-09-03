@@ -121,7 +121,7 @@ export default class auth extends base {
   }
 
   /**
-   * 获取验证码
+   * 更新密码
    */
   static async updatePassword(param) {
     const url = `${this.baseUrl}${patientApi.forget.updatePassword}`
@@ -129,7 +129,7 @@ export default class auth extends base {
   }
 
   /**
-   * 获取验证码
+   * 立即注册
    */
   static async register(param) {
     const url = `${this.baseUrl}${patientApi.register.register}`
@@ -137,11 +137,35 @@ export default class auth extends base {
   }
 
   /**
-   * 获取验证码
+   * 医生完善信息
    */
   static async registerInfo(param) {
     const url = `${this.baseUrl}${patientApi.register.info}`
     return await this.post(url, param)
+  }
+
+  /**
+   * 医院
+   */
+  static async hospital(param) {
+    const url = `${this.baseUrl}${patientApi.register.hospital}`
+    return await this.get(url, param)
+  }
+
+  /**
+   * 科室
+   */
+  static async office(param) {
+    const url = `${this.baseUrl}${patientApi.register.office}`
+    return await this.get(url, param)
+  }
+
+  /**
+   * 职称
+   */
+  static async title(param) {
+    const url = `${this.baseUrl}${patientApi.register.title}`
+    return await this.get(url, param)
   }
 
   /**

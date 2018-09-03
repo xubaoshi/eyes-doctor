@@ -1,8 +1,8 @@
 <script>
   import wepy from 'wepy'
-  import lang from '@/utils/lang'
   import tips from '@/utils/tips'
   import authService from '@/api/auth'
+  import userService from '@/api/user'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '身份信息'
@@ -10,57 +10,92 @@
     data = {
       selectedOffice: null,
       selectedTitle: null,
-      selectedHospital: null
+      selectedHospital: null,
+      titleArray: [],
+      officeArray: [],
+      hospitalArray: [],
+      user: null
     }
     methods = {
       async confirm(e) {
-        if (!e.detail.value.phone) {
-          tips.toast('请输入手机号', null, 'none')
+        if (!e.detail.value.name) {
+          tips.toast('请输入姓名', null, 'none')
           return
         }
-        if (!lang.isPhoneNumber(e.detail.value.phone)) {
-          tips.toast('请输入合格的手机号', null, 'none')
+        if (!this.selectedOffice) {
+          tips.toast('请选择科室', null, 'none')
           return
         }
-        if (!e.detail.value.password) {
-          tips.toast('请输入密码', null, 'none')
+        if (!this.selectedTitle) {
+          tips.toast('请选择职称', null, 'none')
           return
         }
-        await authService.doLogin({
-          phone: e.detail.value.phone,
-          password: e.detail.value.password
+        if (!this.selectedHospital) {
+          tips.toast('请选择医院', null, 'none')
+          return
+        }
+        if (!e.detail.value.expert) {
+          tips.toast('请输入擅长', null, 'none')
+          return
+        }
+        if (!e.detail.value.code) {
+          tips.toast('请输入渠道编码', null, 'none')
+          return
+        }
+        await authService.registerInfo({
+          name: e.detail.value.name,
+          office: this.selectedOffice.id,
+          title: this.selectedTitle.id,
+          hospital: this.selectedHospital.id,
+          code: e.detail.value.code,
+          expert: e.detail.value.expert
         })
         wepy.reLaunch({
-          url: '/pages/home'
+          url: '/pages/login/index'
         })
       },
-      handleGoForget() {
-        wepy.navigateTo({
-          url: '/pages/login/forget'
-        })
+      handleOfficeChange(e) {
+        this.selectedOffice = e.detail.value
+        this.$apply()
+      },
+      handleTitChange(e) {
+        this.selectedTitle = e.detail.value
+        this.$apply()
+      },
+      handleHospitalChange(e) {
+        this.selectedHospital = e.detail.value
+        this.$apply()
       }
+    }
+    async onLoad(e) {
+      Promise.all([
+        authService.hospital(),
+        authService.office(),
+        authService.title()
+      ]).then(async ([hospital, office, title]) => {
+        this.titleArray = title
+        this.officeArray = office
+        this.hospitalArray = hospital
+        this.$apply()
+        if (e.type === 'edit') {
+          const user = await userService.info()
+          this.user = user
+          this.selectedOffice = this.officeArray.findIndex(obj => obj.id === parseInt(this.user.office))
+          this.selectedHospital = this.hospitalArray.findIndex(obj => obj.id === parseInt(this.user.hospital))
+          this.selectedTitle = this.titleArray.findIndex(obj => obj.id === parseInt(this.user.title))
+          this.$apply()
+        }
+      })
     }
     computed = {
       office() {
-        if (this.selectedOffice) {
-          return this.selectedOffice
-        } else {
-          return '请选择科室'
-        }
+        return this.officeArray[this.selectedOffice] && this.officeArray[this.selectedOffice]['name'] ? `眼科-${this.officeArray[this.selectedOffice]['name']}` : '请选择科室'
       },
       tit() {
-        if (this.selectedTitle) {
-          return this.selectedTitle
-        } else {
-          return '请选择职称'
-        }
+        return this.titleArray[this.selectedTitle] && this.titleArray[this.selectedTitle]['name'] ? this.titleArray[this.selectedTitle]['name'] : '请选择职称'
       },
       hospital() {
-        if (this.selectedHospital) {
-          return this.selectedHospital
-        } else {
-          return '请选择医院'
-        }
+        return this.hospitalArray[this.selectedHospital] && this.hospitalArray[this.selectedHospital]['name'] ? this.hospitalArray[this.selectedHospital]['name'] : '请选择医院'
       }
     }
   }
@@ -79,7 +114,7 @@
             </view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" type='number' name="phone" placeholder="请务必填写本人姓名" maxlength="11" />
+            <input class="weui-input" type='number' name="name" placeholder="请务必填写本人姓名" maxlength="5" />
           </view>
         </view>
         <!-- E 姓名 -->
@@ -91,7 +126,11 @@
             </view>
           </view>
           <view class="weui-cell__bd">
-            <view class='txt'>{{office}}</view>
+            <picker mode='selector' range-key='name' @change="handleOfficeChange" range="{{officeArray}}">
+              <view class="picker">
+                {{office}}
+              </view>
+            </picker>
             <text class='iconfont  icon-zhankai arrow'></text>
           </view>
         </view>
@@ -104,7 +143,11 @@
             </view>
           </view>
           <view class="weui-cell__bd">
-            <view class='txt'>{{tit}}</view>
+            <picker mode='selector' range-key='name' @change="handleTitChange" range="{{titleArray}}">
+              <view class="picker">
+                {{tit}}
+              </view>
+            </picker>
             <text class='iconfont  icon-zhankai arrow'></text>
           </view>
         </view>
@@ -117,7 +160,11 @@
             </view>
           </view>
           <view class="weui-cell__bd">
-            <view class='txt'>{{hospital}}</view>
+            <picker mode='selector' range-key='name' @change="handleHospitalChange" range="{{hospitalArray}}">
+              <view class="picker">
+                {{hospital}}
+              </view>
+            </picker>
             <text class='iconfont  icon-zhankai arrow'></text>
           </view>
         </view>
@@ -130,7 +177,7 @@
             </view>
           </view>
           <view class="weui-cell__bd expert-input">
-            <textarea class="weui-input h-input" placeholder='请描述您的擅长及行医经验，有助于为您匹配到精准的患者'  maxlength="50" name="expert"> </textarea>
+            <textarea class="weui-input h-input" placeholder='请描述您的擅长及行医经验，有助于为您匹配到精准的患者' maxlength="20" name="expert"> </textarea>
           </view>
         </view>
         <!-- E 擅长 -->
@@ -142,7 +189,7 @@
             </view>
           </view>
           <view class="weui-cell__bd code-input">
-            <input class="weui-input" type='number' name="phone" placeholder="由客户经理填写" maxlength="11" />
+            <input class="weui-input" type='number' name="code" placeholder="由客户经理填写" maxlength="11" />
           </view>
         </view>
         <!-- E 擅长 -->
