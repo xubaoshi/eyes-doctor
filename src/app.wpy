@@ -27,6 +27,7 @@
     }
     config = {
       pages: [
+        'pages/register/info',
         'pages/index',
         'pages/home',
         // ================================
@@ -51,8 +52,7 @@
         'pages/login/index',
         'pages/login/forget',
         // ================================
-        'pages/register/index',
-        'pages/register/info'
+        'pages/register/index'
         // register
       ],
       window: {

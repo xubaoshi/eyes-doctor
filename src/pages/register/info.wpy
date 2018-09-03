@@ -1,18 +1,196 @@
 <script>
   import wepy from 'wepy'
+  import lang from '@/utils/lang'
+  import tips from '@/utils/tips'
+  import authService from '@/api/auth'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '身份信息'
+    }
+    data = {
+      selectedOffice: null,
+      selectedTitle: null,
+      selectedHospital: null
+    }
+    methods = {
+      async confirm(e) {
+        if (!e.detail.value.phone) {
+          tips.toast('请输入手机号', null, 'none')
+          return
+        }
+        if (!lang.isPhoneNumber(e.detail.value.phone)) {
+          tips.toast('请输入合格的手机号', null, 'none')
+          return
+        }
+        if (!e.detail.value.password) {
+          tips.toast('请输入密码', null, 'none')
+          return
+        }
+        await authService.doLogin({
+          phone: e.detail.value.phone,
+          password: e.detail.value.password
+        })
+        wepy.reLaunch({
+          url: '/pages/home'
+        })
+      },
+      handleGoForget() {
+        wepy.navigateTo({
+          url: '/pages/login/forget'
+        })
+      }
+    }
+    computed = {
+      office() {
+        if (this.selectedOffice) {
+          return this.selectedOffice
+        } else {
+          return '请选择科室'
+        }
+      },
+      tit() {
+        if (this.selectedTitle) {
+          return this.selectedTitle
+        } else {
+          return '请选择职称'
+        }
+      },
+      hospital() {
+        if (this.selectedHospital) {
+          return this.selectedHospital
+        } else {
+          return '请选择医院'
+        }
+      }
     }
   }
 </script>
 
 <template>
-  <view>
-   身份信息
+  <view class="container">
+    <view class='tips'>以下信息为个人信息展示</view>
+    <form @submit="confirm">
+      <view class="weui-cells-form">
+        <!-- S 姓名 -->
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='weui-label'>姓名</text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type='number' name="phone" placeholder="请务必填写本人姓名" maxlength="11" />
+          </view>
+        </view>
+        <!-- E 姓名 -->
+        <!-- S 科室 -->
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='weui-label'>科室</text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <view class='txt'>{{office}}</view>
+            <text class='iconfont  icon-zhankai arrow'></text>
+          </view>
+        </view>
+        <!-- E 科室 -->
+        <!-- S 职称 -->
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='weui-label'>职称</text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <view class='txt'>{{tit}}</view>
+            <text class='iconfont  icon-zhankai arrow'></text>
+          </view>
+        </view>
+        <!-- E 职称 -->
+        <!-- S 医院 -->
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='weui-label'>医院</text>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <view class='txt'>{{hospital}}</view>
+            <text class='iconfont  icon-zhankai arrow'></text>
+          </view>
+        </view>
+        <!-- E 医院 -->
+        <!-- S 擅长 -->
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='weui-label'>擅长</text>
+            </view>
+          </view>
+          <view class="weui-cell__bd expert-input">
+            <textarea class="weui-input h-input" placeholder='请描述您的擅长及行医经验，有助于为您匹配到精准的患者'  maxlength="50" name="expert"> </textarea>
+          </view>
+        </view>
+        <!-- E 擅长 -->
+        <!-- S 擅长 -->
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <view class='cell-label'>
+              <text class='weui-label'>渠道编码</text>
+            </view>
+          </view>
+          <view class="weui-cell__bd code-input">
+            <input class="weui-input" type='number' name="phone" placeholder="由客户经理填写" maxlength="11" />
+          </view>
+        </view>
+        <!-- E 擅长 -->
+      </view>
+      <!--操作栏-->
+      <button class="weui-btn" type="primary" form-type="submit">提 交</button>
+    </form>
   </view>
 </template>
 
 <style lang="less" scoped>
-
+  .container {
+    background-color: #f5f5f5;
+  }
+  .weui-cells-form {
+    background-color: #ffffff;
+  }
+  .weui-cell__bd {
+    padding-left: 80rpx;
+  }
+  .expert-input {
+    textarea {
+      width: 100%;
+    }
+  }
+  .code-input {
+    padding-left: 15rpx;
+  }
+  .txt {
+    color: #9B9B9B;
+  }
+  .tips {
+    padding: 15rpx 30rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 26rpx;
+    color: #9B9B9B;
+  }
+  .arrow {
+    position: absolute;
+    right: 32rpx;
+    bottom: 43%;
+    margin-bottom: -13rpx;
+    font-size: 26rpx;
+    color: #c7c7c7;
+    font-weight: bold;
+  }
+  .h-input {
+    line-height: 1.5em;
+    height: 3em;
+  }
 </style>
