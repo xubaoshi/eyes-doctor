@@ -40,25 +40,22 @@
 </script>
 
 <template>
-  <view>
     <view class='avtar'>
-      <text class='iconfont  icon-qianbao'></text>
+      <image class='logo' mode='aspectFit' src='/images/aiyan.png'></image>
     </view>
     <view class='tit'>欢迎使用爱眼康咨询平台</view>
     <view class='sub-tit'>自由执业，从这里开始</view>
     <button class="weui-btn" type="primary" @tap='handleGoLogin'>手机号登录</button>
     <button class="weui-btn" type="default" @tap='handleGoRegister'>注册为医生</button>
-  </view>
 </template>
 
 <style lang="less" scoped>
   .avtar {
     margin-top: 100rpx;
     text-align: center;
-    text {
-      font-size: 250rpx;
-      color: #15C4A6;
-    }
+   .logo{
+     width: 200rpx;
+   }
   }
   .tit {
     font-family: PingFangSC-Medium;
