@@ -93,9 +93,6 @@
             <view wx:elif="{{item.type === 'image'}}" class='txt txt-img' @tap='handlePreview({{item}})'>
               <image class='img' mode='aspectFill' src='{{item.content}}'></image>
             </view>
-            <!-- <view wx:elif="{{item.type === 'vedio'}}"  class='txt txt-vedio'>
-                      <video src="{{item.content}}" objectFit="cover" class='vedio' id="video{{index}}"  @error="videoErrorCallback"></video>
-                    </view> -->
           </view>
         </block>
       </repeat>
@@ -104,6 +101,7 @@
     <!-- S 底部立即咨询悬浮按钮 -->
     <view class='fix-btm'>
       <button type='primary' @tap='handleGoConsultAdd({{doctorId}})'>快速回复</button>
+      <button @tap='handleGoConsultAdd({{doctorId}})'>处理完成</button>
     </view>
     <!-- E 底部立即咨询悬浮按钮 -->
   </view>
@@ -112,4 +110,7 @@
 <style lang="less" scoped>
   @import url('../../styles/components/doc_profile.less');
   @import url('../../styles/components/chat.less');
+  .fix-btm {
+    display: flex;
+  }
 </style>

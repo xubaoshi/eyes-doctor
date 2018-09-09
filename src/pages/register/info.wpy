@@ -44,9 +44,9 @@
         }
         await authService.registerInfo({
           name: e.detail.value.name,
-          office: this.selectedOffice.id,
-          title: this.selectedTitle.id,
-          hospital: this.selectedHospital.id,
+          office: this.officeArray[this.selectedOffice]['id'],
+          title: this.titleArray[this.selectedTitle]['id'],
+          hospital: this.hospitalArray[this.selectedHospital]['id'],
           code: e.detail.value.code,
           expert: e.detail.value.expert
         })
@@ -72,7 +72,7 @@
         authService.hospital(),
         authService.office(),
         authService.title()
-      ]).then(async ([hospital, office, title]) => {
+      ]).then(async([hospital, office, title]) => {
         this.titleArray = title
         this.officeArray = office
         this.hospitalArray = hospital
@@ -114,7 +114,7 @@
             </view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" type='number' name="name" placeholder="请务必填写本人姓名" maxlength="5" />
+            <input class="weui-input" name="name" placeholder="请务必填写本人姓名" maxlength="5" />
           </view>
         </view>
         <!-- E 姓名 -->

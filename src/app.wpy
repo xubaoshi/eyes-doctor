@@ -27,13 +27,13 @@
     }
     config = {
       pages: [
+        'pages/consult/detail',
         'pages/index',
         'pages/home',
         // ================================
         // consult
         'pages/consult/add',
         'pages/consult/evaluate',
-        'pages/consult/detail',
         'pages/consult/history',
         'pages/consult/all',
         // ================================
