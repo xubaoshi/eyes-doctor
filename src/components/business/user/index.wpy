@@ -5,7 +5,8 @@
     connect
   } from 'wepy-redux'
   @connect({
-    user: store.get('user')
+    user: store.get('user'),
+    userInfo: store.get('userInfo')
   })
   export default class UserIndex extends wepy.component {
     methods = {
@@ -38,8 +39,8 @@
   <view>
     <!-- S 个人信息 -->
     <view class='user-panel'>
-      <image class='avatar' mode='aspectFill' src='{{user.avatar}}'></image>
-      <view class='user-name'>{{user.name}}</view>
+      <image class='avatar' mode='aspectFill' src='{{userInfo.avatarUrl}}'></image>
+      <view class='user-name'>{{userInfo.nickName}}</view>
       <view class='user-intro'>
         <text class='txt'>眼科副主任医师</text>
         <text class='txt'>江苏省南京市鼓楼医院</text>
