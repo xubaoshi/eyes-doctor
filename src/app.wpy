@@ -27,6 +27,7 @@
     }
     config = {
       pages: [
+        'pages/register/hospital',
         'pages/index',
         'pages/home',
         // ================================
@@ -52,7 +53,6 @@
         'pages/login/forget',
         // ================================
         'pages/register/info',
-        'pages/register/hospital',
         'pages/register/index'
         // register
       ],
