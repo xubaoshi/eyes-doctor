@@ -52,7 +52,6 @@
         'pages/login/forget',
         // ================================
         'pages/register/info',
-        'pages/register/hospital',
         'pages/register/index'
         // register
       ],
