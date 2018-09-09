@@ -14,21 +14,9 @@
       placeholder: '请详细描述您的症状和身体状况，便于医生进行准确分析、我们会确保您的隐私安全。（请输入10~500字）',
       uploadFileList: [],
       doctorId: '',
-      consultId: ''
+      consultId: null
     }
     onLoad(e) {
-      // 从医生详情进入 doctorId 随 url 带入
-      if (e.doctorId) {
-        this.doctorId = e.doctorId
-        this.$apply()
-      }
-      //我的咨询列表不需要支付其他需要支付
-      if (e.isCurent) {
-        this.isCurent = true
-      } else {
-        this.isCurent = false
-      }
-      // 获取 consultId
       this.consultId = e.consultId
     }
     methods = {
@@ -37,28 +25,10 @@
         if (content.length < 10) {
           tips.modal('咨询内容至少输入10个字')
         } else {
-          const param = {
-            consultId: this.consultId,
-            content: content,
-            uploadFileList: this.uploadFileList
-          }
-          const str = JSON.stringify(param)
-          wepy.setStorage({
-            key: 'consult',
-            data: str
+          await consultService.add(param)
+          wepy.reLaunch({
+            url: `/pages/home?currentIndex=1`
           })
-          // 我的咨询 进去不需要 选择咨询人直接返回我的咨询列表
-          if (this.isCurent) {
-            // 新增咨询
-            await consultService.add(param)
-            wepy.reLaunch({
-              url: `/pages/index?currentIndex=1`
-            })
-          } else {
-            wepy.navigateTo({
-              url: `/pages/consult/consulter/list?doctorId=${this.doctorId}`
-            })
-          }
         }
       },
       handleUpload() {
@@ -185,7 +155,7 @@
     <view class='tips'>
       上传相关图片(检查单、CT、病例、患处、药品等)，只有您和当前医生可见，我们会确保您的隐私安全。
     </view>
-    <button form-type="submit" class='next-btn'>下一步</button>
+    <button form-type="submit" class='next-btn'>提交</button>
     <zanActionsheet componentId="baseActionsheet" />
   </form>
 </template>

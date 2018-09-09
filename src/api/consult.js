@@ -29,8 +29,8 @@ export default class consult extends base {
     return await this.post(url, param)
   }
 
-  static async price(param) {
-    const url = `${this.baseUrl}${patientApi.consult.price}`
+  static async done(param) {
+    const url = `${this.baseUrl}${patientApi.consult.done}`
     return await this.get(url, param)
   }
 

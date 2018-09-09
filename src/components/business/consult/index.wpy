@@ -82,7 +82,7 @@
           <text class='cst-more' @tap='handleGoHis'>历史记录 <text class='iconfont  icon-zhankai arrow'></text></text>
         </view>
         <repeat for='{{allList}}' item='item'>
-          <view class='cmt-item' @tap='handleGoConsult({item})'>
+          <view class='cmt-item' @tap='handleGoConsult({{item}})'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
               <text class='cmt-author'>{{item.name}}</text>

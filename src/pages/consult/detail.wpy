@@ -48,14 +48,17 @@
       videoErrorCallback(e) {
         console.log(e)
       },
-      handleGoConsultAdd(doctorId) {
+      handleGoConsultAdd() {
         wepy.navigateTo({
-          url: `/pages/consult/add?consultId=${this.consult.id}&isCurent=${this.isCurent}`
+          url: `/pages/consult/add?consultId=${this.id}`
         })
       },
-      handledDone(doctorId) {
+      async handledDone() {
+        await consultService.done({
+          consultId: this.id
+        })
         wepy.navigateTo({
-          url: `/pages/consult/add?consultId=${this.consult.id}&isCurent=${this.isCurent}`
+          url: `/pages/home?currentIndex=1`
         })
       },
       handlePreview(item) {
@@ -105,8 +108,8 @@
     <!-- E 聊天界面 -->
     <!-- S 底部立即咨询悬浮按钮 -->
     <view class='fix-btm fix-btm-col-2'>
-      <button type='primary' @tap='handleGoConsultAdd({{doctorId}})'>快速回复</button>
-      <button type='default' @tap='handleGoConsultAdd({{doctorId}})'>处理完成</button>
+      <button type='primary' @tap='handleGoConsultAdd'>快速回复</button>
+      <button type='default' @tap='handledDone'>处理完成</button>
     </view>
     <!-- E 底部立即咨询悬浮按钮 -->
   </view>

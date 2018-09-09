@@ -31,6 +31,7 @@ export const patientApi = {
     myList: '/api/consult/myList', // 我的咨询
     history: '/api/consult/history/list', // 历史咨询
     detail: '/api/consult/detail', // 咨询详情（再次咨询）
+    done: '/api/consult/done', // 咨询完成
     add: '/api/consult/add' // 咨询新增
   },
   user: {
