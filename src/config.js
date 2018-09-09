@@ -7,7 +7,7 @@ export const patientApi = {
     list: '/api/banner/list' // 首页 banner 列表
   },
   auth: {
-    session: '/api/auth/session', // 登录操作获取 third_session 及 login_code
+    session: '/api/auth/session', // 登录操作获取 thirdSession 及 loginCode
     checkSession: '/api/auth/check_session', // 校验 session 是否生效
     decodeUserinfo: '/api/auth/decode_userinfo' // wepy.getUserInfo() 返回值的解码
   },

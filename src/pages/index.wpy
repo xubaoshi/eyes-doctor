@@ -5,8 +5,20 @@
     config = {
       navigationBarTitleText: '爱眼康'
     }
+    data = {
+      hasAuth: false
+    }
     async onLoad() {
-      const loginCode = wepy.getStorageSync('login_code')
+      wepy.getSetting().then(res => {
+        if (res.authSetting['scope.userInfo']) {
+          authService.user()
+          this.hasAuth = true
+        } else {
+          this.hasAuth = false
+        }
+        this.$apply()
+      })
+      const loginCode = wepy.getStorageSync('loginCode')
       if (loginCode != null && loginCode !== '') {
         try {
           await authService.checkLoginCode(loginCode)
@@ -34,28 +46,50 @@
         wepy.navigateTo({
           url: '/pages/register/index'
         })
+      },
+      handleUserInfoGoLogin(e) {
+        if (e.detail.userInfo) {
+          authService.user()
+          wepy.navigateTo({
+            url: '/pages/login/index'
+          })
+        }
+      },
+      handleUserInfoGoRegister(e) {
+        if (e.detail.userInfo) {
+          authService.user()
+          wepy.navigateTo({
+            url: '/pages/register/index'
+          })
+        }
       }
     }
   }
 </script>
 
 <template>
-    <view class='avtar'>
-      <image class='logo' mode='aspectFit' src='/images/aiyan.png'></image>
-    </view>
-    <view class='tit'>欢迎使用爱眼康咨询平台</view>
-    <view class='sub-tit'>自由执业，从这里开始</view>
+  <view class='avtar'>
+    <image class='logo' mode='aspectFit' src='/images/aiyan.png'></image>
+  </view>
+  <view class='tit'>欢迎使用爱眼康咨询平台</view>
+  <view class='sub-tit'>自由执业，从这里开始</view>
+  <block wx:if='{{hasAuth}}'>
     <button class="weui-btn" type="primary" @tap='handleGoLogin'>手机号登录</button>
     <button class="weui-btn" type="default" @tap='handleGoRegister'>注册为医生</button>
+  </block>
+  <block wx:else>
+    <button class="weui-btn" type="primary" open-type="getUserInfo" bindgetuserinfo='handleUserInfoGoLogin'>手机号登录</button>
+    <button class="weui-btn" type="default" open-type="getUserInfo" bindgetuserinfo='handleUserInfoGoRegister'>注册为医生</button>
+  </block>
 </template>
 
 <style lang="less" scoped>
   .avtar {
     margin-top: 100rpx;
     text-align: center;
-   .logo{
-     width: 200rpx;
-   }
+    .logo {
+      width: 200rpx;
+    }
   }
   .tit {
     font-family: PingFangSC-Medium;

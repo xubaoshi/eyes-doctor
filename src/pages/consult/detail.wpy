@@ -53,6 +53,11 @@
           url: `/pages/consult/add?consultId=${this.consult.id}&isCurent=${this.isCurent}`
         })
       },
+      handledDone(doctorId) {
+        wepy.navigateTo({
+          url: `/pages/consult/add?consultId=${this.consult.id}&isCurent=${this.isCurent}`
+        })
+      },
       handlePreview(item) {
         wepy.previewImage({
           urls: [item.content]
