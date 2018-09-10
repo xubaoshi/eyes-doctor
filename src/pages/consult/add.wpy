@@ -11,24 +11,27 @@
   } from '@/config'
   export default class Index extends wepy.page {
     data = {
-      placeholder: '请详细描述您的症状和身体状况，便于医生进行准确分析、我们会确保您的隐私安全。（请输入10~500字）',
+      placeholder: '请详细描述解答用户咨询。（请输入10~500字）',
       uploadFileList: [],
-      doctorId: '',
       consultId: null
     }
     onLoad(e) {
       this.consultId = e.consultId
+      this.$apply()
     }
     methods = {
       async bindFormSubmit(e) {
         const content = e.detail.value.content
+        const param = {
+          consultId: this.consultId,
+          content: content,
+          uploadFileList: this.uploadFileList
+        }
         if (content.length < 10) {
-          tips.modal('咨询内容至少输入10个字')
+          tips.modal('解答内容至少输入10个字')
         } else {
           await consultService.add(param)
-          wepy.reLaunch({
-            url: `/pages/home?currentIndex=1`
-          })
+          wepy.navigateBack()
         }
       },
       handleUpload() {

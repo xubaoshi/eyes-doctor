@@ -1,16 +1,21 @@
 <script>
+  /* eslint-disable */
   import wepy from 'wepy'
   import consultService from '@/api/consult'
   import lang from '@/utils/lang'
+  import zanDialog from '@/components/zanui/zan-dialog'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '详情'
     }
+    components = {
+      zanDialog
+    }
     data = {
       consult: {},
-      doctorId: null,
       id: null,
-      isCurent: false
+      isOwn: 0,
+      isHistory: 0
     }
     computed = {
       list() {
@@ -29,13 +34,9 @@
       }
     }
     onLoad(e) {
-      this.doctorId = e.doctorId
       this.id = e.id
-      if (e.isCurent) {
-        this.isCurent = true
-      } else {
-        this.isCurent = false
-      }
+      this.isOwn = e.isOwn ? parseInt(e.isOwn) : 0
+      this.isHistory = e.isHistory ? parseInt(e.isHistory) : 0
       this.$apply()
     }
     async onShow() {
@@ -53,17 +54,32 @@
           url: `/pages/consult/add?consultId=${this.id}`
         })
       },
-      async handledDone() {
-        await consultService.done({
-          consultId: this.id
-        })
-        wepy.navigateTo({
-          url: `/pages/home?currentIndex=1`
-        })
+      handledDone() {
+        this.$invoke('zanDialog', 'showZanDialog', {
+            title: '确定结束本次咨询？',
+            content: '点击确认后，此咨询结束。咨询者开始对此次咨询进行评价。',
+            showCancel: true
+          })
+          .then(async() => {
+            await consultService.done({
+              consultId: this.id
+            })
+            wepy.navigateTo({
+              url: `/pages/home?currentIndex=1`
+            })
+          })
+          .catch(() => {
+            console.log('=== dialog ===', 'type: cancel')
+          })
       },
       handlePreview(item) {
         wepy.previewImage({
           urls: [item.content]
+        })
+      },
+      handleEval() {
+        wepy.navigateTo({
+          url: `/pages/consult/evaluate?consultId=${this.id}`
         })
       }
     }
@@ -107,11 +123,24 @@
     </view>
     <!-- E 聊天界面 -->
     <!-- S 底部立即咨询悬浮按钮 -->
-    <view class='fix-btm fix-btm-col-2'>
-      <button type='primary' @tap='handleGoConsultAdd'>快速回复</button>
-      <button type='default' @tap='handledDone'>处理完成</button>
-    </view>
+    <block wx:if='{{isOwn === 1}}'>
+      <view class='fix-btm fix-btm-col-2'>
+        <button type='primary' @tap='handleGoConsultAdd'>快速回复</button>
+        <button type='default' @tap='handledDone'>处理完成</button>
+      </view>
+    </block>
+    <block wx:elif='{{isOwn === 0 && isHistory  === 0}}'>
+      <view class='fix-btm'>
+        <button type='primary' class='next-btn' @tap='handleGoConsultAdd'>快速回复</button>
+      </view>
+    </block>
+    <block wx:elif='{{isOwn === 0 && isHistory === 1}}'>
+      <view class='fix-btm'>
+        <button type='default' class='next-btn' @tap='handleEval'>查看评价</button>
+      </view>
+    </block>
     <!-- E 底部立即咨询悬浮按钮 -->
+    <zanDialog/>
   </view>
 </template>
 
@@ -120,5 +149,8 @@
   @import url('../../styles/components/chat.less');
   .fix-btm {
     display: flex;
+  }
+  .next-btn {
+    width: 100%;
   }
 </style>

@@ -8,13 +8,15 @@
       navigationBarTitleText: '身份信息'
     }
     data = {
-      selectedOffice: null,
-      selectedTitle: null,
-      selectedHospital: null,
+      selectedOfficeValue: '',
+      selectedTitleValue: '',
+      selectedHospitalValue: '',
+      selectedHospitalName: '',
       titleArray: [],
       officeArray: [],
       hospitalArray: [],
-      user: null
+      user: null,
+      isEdit: true
     }
     methods = {
       async confirm(e) {
@@ -22,15 +24,15 @@
           tips.toast('请输入姓名', null, 'none')
           return
         }
-        if (!this.selectedOffice) {
+        if (!this.selectedOfficeValue) {
           tips.toast('请选择科室', null, 'none')
           return
         }
-        if (!this.selectedTitle) {
+        if (!this.selectedTitleValue) {
           tips.toast('请选择职称', null, 'none')
           return
         }
-        if (!this.selectedHospital) {
+        if (!this.selectedHospitalValue) {
           tips.toast('请选择医院', null, 'none')
           return
         }
@@ -44,9 +46,10 @@
         }
         await authService.registerInfo({
           name: e.detail.value.name,
-          office: this.officeArray[this.selectedOffice]['id'],
-          title: this.titleArray[this.selectedTitle]['id'],
-          hospital: this.hospitalArray[this.selectedHospital]['id'],
+          office: this.officeArray[this.selectedOfficeValue]['id'],
+          title: this.titleArray[this.selectedTitleValue]['id'],
+          hospitalValue: this.selectedHospitalValue,
+          hospitalName: this.selectedHospitalName,
           code: e.detail.value.code,
           expert: e.detail.value.expert
         })
@@ -55,47 +58,45 @@
         })
       },
       handleOfficeChange(e) {
-        this.selectedOffice = e.detail.value
+        this.selectedOfficeValue = e.detail.value
         this.$apply()
       },
       handleTitChange(e) {
-        this.selectedTitle = e.detail.value
+        this.selectedTitleValue = e.detail.value
         this.$apply()
       },
       handleHospitalChange(e) {
-        this.selectedHospital = e.detail.value
+        this.selectedHospitalValue = e.detail.value
         this.$apply()
       }
     }
     async onLoad(e) {
       Promise.all([
-        authService.hospital(),
         authService.office(),
         authService.title()
-      ]).then(async([hospital, office, title]) => {
+      ]).then(async([office, title]) => {
         this.titleArray = title
         this.officeArray = office
-        this.hospitalArray = hospital
-        this.$apply()
         if (e.type === 'edit') {
           const user = await userService.info()
           this.user = user
-          this.selectedOffice = this.officeArray.findIndex(obj => obj.id === parseInt(this.user.office))
-          this.selectedHospital = this.hospitalArray.findIndex(obj => obj.id === parseInt(this.user.hospital))
-          this.selectedTitle = this.titleArray.findIndex(obj => obj.id === parseInt(this.user.title))
+          this.selectedOfficeValue = this.officeArray.findIndex(obj => obj.id === parseInt(this.user.office))
+          this.selectedHospitalName = this.user.hospitalName
+          this.selectedTitleValue = this.titleArray.findIndex(obj => obj.id === parseInt(this.user.title))
+          this.isEdit = true
           this.$apply()
+        } else {
+          this.isEdit = false
         }
+        this.$apply()
       })
     }
     computed = {
       office() {
-        return this.officeArray[this.selectedOffice] && this.officeArray[this.selectedOffice]['name'] ? `眼科-${this.officeArray[this.selectedOffice]['name']}` : '请选择科室'
+        return this.officeArray[this.selectedOfficeValue] && this.officeArray[this.selectedOfficeValue]['name'] ? `眼科-${this.officeArray[this.selectedOfficeValue]['name']}` : '请选择科室'
       },
       tit() {
-        return this.titleArray[this.selectedTitle] && this.titleArray[this.selectedTitle]['name'] ? this.titleArray[this.selectedTitle]['name'] : '请选择职称'
-      },
-      hospital() {
-        return this.hospitalArray[this.selectedHospital] && this.hospitalArray[this.selectedHospital]['name'] ? this.hospitalArray[this.selectedHospital]['name'] : '请选择医院'
+        return this.titleArray[this.selectedTitleValue] && this.titleArray[this.selectedTitleValue]['name'] ? this.titleArray[this.selectedTitleValue]['name'] : '请选择职称'
       }
     }
   }
@@ -114,7 +115,7 @@
             </view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" name="name" placeholder="请务必填写本人姓名" maxlength="5" />
+            <input class="weui-input" name="name" placeholder="请务必填写本人姓名" value='{{user.name}}' maxlength="5" />
           </view>
         </view>
         <!-- E 姓名 -->
@@ -162,7 +163,7 @@
           <view class="weui-cell__bd">
             <picker mode='selector' range-key='name' @change="handleHospitalChange" range="{{hospitalArray}}">
               <view class="picker">
-                {{hospital}}
+                {{selectedHospitalName}}
               </view>
             </picker>
             <text class='iconfont  icon-zhankai arrow'></text>
@@ -177,19 +178,19 @@
             </view>
           </view>
           <view class="weui-cell__bd expert-input">
-            <textarea class="weui-input h-input" placeholder='请描述您的擅长及行医经验，有助于为您匹配到精准的患者' maxlength="20" name="expert"> </textarea>
+            <textarea class="weui-input h-input" value='{{user.expert}}' placeholder='请描述您的擅长及行医经验，有助于为您匹配到精准的患者' maxlength="20" name="expert"> </textarea>
           </view>
         </view>
         <!-- E 擅长 -->
         <!-- S 擅长 -->
-        <view class="weui-cell">
+        <view class="weui-cell" wx:if='{{!isEdit}}'>
           <view class="weui-cell__hd">
             <view class='cell-label'>
               <text class='weui-label'>渠道编码</text>
             </view>
           </view>
           <view class="weui-cell__bd code-input">
-            <input class="weui-input" type='number' name="code" placeholder="由客户经理填写" maxlength="11" />
+            <input class="weui-input" type='number' name="code" value='{{user.code}}' placeholder="由客户经理填写" maxlength="11" />
           </view>
         </view>
         <!-- E 擅长 -->

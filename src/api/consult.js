@@ -34,8 +34,12 @@ export default class consult extends base {
     return await this.get(url, param)
   }
 
-  static processEvalData(item) {
+  // 评价
+  static async evaluate(param) {
+    const url = `${this.baseUrl}${patientApi.consult.evaluate}`
+    const item = await this.get(url, param)
     item['dateFormat'] = lang.dateFormat(item.date, 'yyyy-MM-dd')
+    return item
   }
 
   static processDataBySec(item) {

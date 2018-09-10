@@ -32,7 +32,8 @@ export const patientApi = {
     history: '/api/consult/history/list', // 历史咨询
     detail: '/api/consult/detail', // 咨询详情（再次咨询）
     done: '/api/consult/done', // 咨询完成
-    add: '/api/consult/add' // 咨询新增
+    add: '/api/consult/add', // 咨询新增
+    evaluate: '/api/consult/evaluate'  // 咨询评价
   },
   user: {
     info: '/api/user/info', // 个人信息 （个人信息tab页所需数据）

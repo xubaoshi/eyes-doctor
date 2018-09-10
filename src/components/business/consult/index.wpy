@@ -50,14 +50,14 @@
         this.isLoading = false
         this.$apply()
       },
-      handleGoHis() {
-        wepy.navigateTo({
-          url: '/pages/consult/history'
-        })
-      },
       handleGoConsult(item) {
         wepy.navigateTo({
-          url: `/pages/consult/detail?id=${item.id}`
+          url: `/pages/consult/detail?id=${item.id}&isOwn=1`
+        })
+      },
+      handleGoHis(item) {
+        wepy.navigateTo({
+          url: `/pages/consult/history`
         })
       }
     }

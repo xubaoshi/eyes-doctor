@@ -12,7 +12,7 @@
     methods = {
       handleGoInfo() {
         wepy.navigateTo({
-          url: '/pages/user/info'
+          url: '/pages/register/info?type=edit'
         })
       },
       handleGoIncome() {
@@ -29,8 +29,7 @@
         wepy.navigateTo({
           url: '/pages/user/share/index'
         })
-      },
-      handleGoService() {}
+      }
     }
   }
 </script>
@@ -40,23 +39,32 @@
     <!-- S 个人信息 -->
     <view class='user-panel'>
       <image class='avatar' mode='aspectFill' src='{{userInfo.avatarUrl}}'></image>
-      <view class='user-name'>{{userInfo.nickName}}</view>
+      <view class='user-name'>{{user.name || userInfo.nickName}}</view>
       <view class='user-intro'>
-        <text class='txt'>眼科副主任医师</text>
-        <text class='txt'>江苏省南京市鼓楼医院</text>
+        <text class='txt'>{{user.titleName}}</text>
+        <text class='txt'>{{user.hospitalName}}</text>
       </view>
     </view>
     <view class='user-income'>
       <view class='user-income-item'>
-        <text class='txt'>￥200</text> 账户金额
+        <text class='txt'>￥{{user.account}}</text> 账户金额
       </view>
       <view class='user-income-item'>
-        <text class='txt'>￥50</text> 今日收入
+        <text class='txt'>￥{{user.todayIncome}}</text> 今日收入
       </view>
     </view>
     <!-- E 个人信息 -->
     <!-- S 表单列表 -->
     <view class='ui-form'>
+       <view class='field'  @tap='handleGoInfo'>
+        <view class='field-icon orange'>
+          <text class='iconfont  icon-renminbi '></text>
+        </view>
+        <text class='field-tit'>我的账户</text>
+        <view class='field-tail'>
+          <text class='iconfont  icon-zhankai arrow'></text>
+        </view>
+      </view>
       <!-- /field -->
       <view class='field' @tap='handleGoIncome'>
         <view class='field-icon blue'>
@@ -69,7 +77,7 @@
       </view>
     </view>
     <view class='ui-form'>
-      <view class='field' @tap='handleGoPassword'>
+      <view class='field' @tap='handleGoShare'>
         <view class='field-icon blue'>
           <text class='iconfont  icon-changjingtuijianpitchon'></text>
         </view>
@@ -82,7 +90,7 @@
     </view>
 
     <view class='ui-form'>
-      <view class='field' @tap='handleGoPassword'>
+      <view class='field' @tap='handleGoCash'>
         <view class='field-icon orange'>
           <text class='iconfont  icon-qianbao'></text>
         </view>

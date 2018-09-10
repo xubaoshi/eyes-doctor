@@ -72,7 +72,12 @@
       },
       handleGoConsult(item) {
         wepy.navigateTo({
-          url: `/pages/consult/detail?id=${item.id}`
+          url: `/pages/consult/detail?id=${item.id}&isOwn=1`
+        })
+      },
+      handleGoAllConsult(item) {
+        wepy.navigateTo({
+          url: `/pages/consult/detail?id=${item.id}&isOwn=0`
         })
       }
     }
@@ -120,7 +125,7 @@
       <view class='cmt-lst'>
         <!-- /评价列表项，循环 -->
         <repeat for='{{myList}}' item='item'>
-          <view class='cmt-item' @tap='handleGoConsult({{item}})'>
+          <view class='cmt-item' @tap='handleGoAllConsult({{item}})'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
               <text class='cmt-author'>{{item.name}}</text>

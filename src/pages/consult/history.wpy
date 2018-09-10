@@ -51,14 +51,9 @@
         this.isLoading = false
         this.$apply()
       },
-      handleGoEval(item) {
-        wepy.navigateTo({
-          url: `/pages/consult/evaluate?doctorId=${item.doctorId}`
-        })
-      },
       handleGoConsult(item) {
         wepy.navigateTo({
-          url: `/pages/consult/add?doctorId=${item.doctorId}`
+          url: `/pages/consult/detail?id=${item.id}&isHistory=1`
         })
       }
     }
@@ -70,7 +65,7 @@
     <view class='cmt-wrap'>
       <view class='cmt-lst'>
         <repeat for='{{allList}}' item='item'>
-          <view class='cmt-item'>
+          <view class='cmt-item' @tap='handleGoConsult({{item}})'>
             <view class='cmt-hd'>
               <image class='cmt-avatar' mode='aspectFill' src='{{item.avatar}}'></image>
               <text class='cmt-author'>{{item.name}}</text>

@@ -11,6 +11,7 @@ export default class user extends base {
     const url = `${this.baseUrl}${patientApi.user.info}`
     const userInfo = await this.get(url, param)
     store.save('user', userInfo)
+    return userInfo
   }
 
   // 更新用户
