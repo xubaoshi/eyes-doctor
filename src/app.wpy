@@ -52,7 +52,8 @@
         'pages/login/forget',
         // ================================
         'pages/register/info',
-        'pages/register/index'
+        'pages/register/index',
+        'pages/register/hospital'
         // register
       ],
       window: {

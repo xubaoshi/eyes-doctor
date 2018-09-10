@@ -1,11 +1,52 @@
 <script>
   import wepy from 'wepy'
+  import authService from '@/api/auth'
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '选择医院'
     }
-    onLoad() {
-      console.log('this is home page')
+    data = {
+      searchValue: '',
+      hospitals: []
+    }
+    async onLoad() {
+      const hospitals = await authService.hospital()
+      this.hospitals = hospitals
+      this.$apply()
+    }
+    methods = {
+      handleSearchValue(e) {
+        this.searchValue = e.detail.value
+        this.$apply()
+        this.throttle(this.queryData, null, 400, e.detail.value);
+      },
+      handleSelect(item) {
+        wepy.$instance.globalData['hospital'] = {
+          name: item.name,
+          value: item.id
+        }
+        wepy.navigateBack()
+      },
+      handleClear() {
+        this.searchValue = ''
+        this.$apply()
+        this.queryData()
+      },
+      handleCancel() {
+        wepy.navigateBack()
+      }
+    }
+    throttle(fn, context, delay, text) {
+      clearTimeout(fn.timeoutId)
+      fn.timeoutId = setTimeout(() => {
+        fn.call(this, text)
+      }, delay)
+    }
+    async queryData(text) {
+      this.hospitals = await authService.hospital({
+        name: text
+      })
+      this.$apply()
     }
   }
 </script>
@@ -21,10 +62,12 @@
           </view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" type='number' name="phone" placeholder="请输入手机号" maxlength="11" />
-          <text class='colse'>x</text>
+          <input class="weui-input" placeholder="请输入医院名称" maxlength="50" value='{{searchValue}}' @input='handleSearchValue' />
+          <view class="weui-cell__ft" wx:if='{{searchValue}}'>
+            <icon class='close' type='cancel' @tap='handleClear' color='#999'></icon>
+          </view>
         </view>
-        <view class="weui-cell__tail">
+        <view class="weui-cell__tail" @tap='handleCancel'>
           取消
         </view>
       </view>
@@ -32,8 +75,9 @@
     </view>
     <!-- S 搜索结果 -->
     <view class="sch-lst">
-      <view class="sch-lst-item">南京医科大学附属医院</view>
-      <view class="sch-lst-item">南京医科大学附属医院</view>
+      <repeat for='{{hospitals}}'>
+        <view class="sch-lst-item" @tap='handleSelect({{item}})'>{{item.name}}</view>
+      </repeat>
     </view>
     <!-- E 搜索结果 -->
   </view>
@@ -55,6 +99,7 @@
       background-color: #EDECEB;
       border-radius: 15rpx;
       .weui-input {
+        padding-right: 80rpx;
         height: 56rpx;
         min-height: 56rpx;
         font-size: 26rpx;
@@ -62,19 +107,10 @@
     }
     .weui-cell__bd {
       position: relative;
-      .colse {
+      .close {
         position: absolute;
         right: 25rpx;
-        top: 15rpx;
-        display: inline-block;
-        width: 30rpx;
-        height: 30rpx;
-        line-height: 22rpx;
-        border-radius: 50%;
-        background-color: #999;
-        text-align: center;
-        font-size: 26rpx;
-        color: #fff;
+        top: 5rpx; // color: #fff;
       }
     }
     .weui-cell__tail {

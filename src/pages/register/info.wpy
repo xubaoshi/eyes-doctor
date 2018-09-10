@@ -40,22 +40,40 @@
           tips.toast('请输入擅长', null, 'none')
           return
         }
-        if (!e.detail.value.code) {
+        if (!e.detail.value.code && !this.isEdit) {
           tips.toast('请输入渠道编码', null, 'none')
           return
         }
-        await authService.registerInfo({
-          name: e.detail.value.name,
-          office: this.officeArray[this.selectedOfficeValue]['id'],
-          title: this.titleArray[this.selectedTitleValue]['id'],
-          hospitalValue: this.selectedHospitalValue,
-          hospitalName: this.selectedHospitalName,
-          code: e.detail.value.code,
-          expert: e.detail.value.expert
-        })
-        wepy.reLaunch({
-          url: '/pages/login/index'
-        })
+        if (this.isEdit) {
+          await userService.updateUser({
+            name: e.detail.value.name,
+            officeValue: this.officeArray[this.selectedOfficeValue]['id'],
+            titleValue: this.titleArray[this.selectedTitleValue]['id'],
+            officeName: this.officeArray[this.selectedOfficeValue]['name'],
+            titleName: this.titleArray[this.selectedTitleValue]['name'],
+            hospitalValue: this.selectedHospitalValue,
+            hospitalName: this.selectedHospitalName,
+            expert: e.detail.value.expert
+          })
+          wepy.$instance.globalData['hospital'] = {}
+          wepy.navigateBack()
+        } else {
+          await authService.registerInfo({
+            name: e.detail.value.name,
+            officeValue: this.officeArray[this.selectedOfficeValue]['id'],
+            titleValue: this.titleArray[this.selectedTitleValue]['id'],
+            officeName: this.officeArray[this.selectedOfficeValue]['name'],
+            titleName: this.officeArray[this.selectedOfficeValue]['name'],
+            hospitalValue: this.selectedHospitalValue,
+            hospitalName: this.selectedHospitalName,
+            code: e.detail.value.code,
+            expert: e.detail.value.expert
+          })
+          wepy.$instance.globalData['hospital'] = {}
+          wepy.reLaunch({
+            url: '/pages/login/index'
+          })
+        }
       },
       handleOfficeChange(e) {
         this.selectedOfficeValue = e.detail.value
@@ -66,8 +84,9 @@
         this.$apply()
       },
       handleHospitalChange(e) {
-        this.selectedHospitalValue = e.detail.value
-        this.$apply()
+        wepy.navigateTo({
+          url: '/pages/register/hospital'
+        })
       }
     }
     async onLoad(e) {
@@ -84,12 +103,22 @@
           this.selectedHospitalName = this.user.hospitalName
           this.selectedTitleValue = this.titleArray.findIndex(obj => obj.id === parseInt(this.user.title))
           this.isEdit = true
+          wepy.$instance.globalData['hospital'] = {}
+          wepy.$instance.globalData['hospital']['name'] = this.user.hospitalName
+          wepy.$instance.globalData['hospital']['value'] = this.user.hospitalValue
           this.$apply()
         } else {
           this.isEdit = false
         }
         this.$apply()
       })
+    }
+    onShow() {
+      if (wepy.$instance.globalData['hospital']) {
+        this.selectedHospitalName = wepy.$instance.globalData['hospital']['name']
+        this.selectedHospitalValue = wepy.$instance.globalData['hospital']['value']
+        this.$apply()
+      }
     }
     computed = {
       office() {
@@ -160,12 +189,10 @@
               <text class='weui-label'>医院</text>
             </view>
           </view>
-          <view class="weui-cell__bd">
-            <picker mode='selector' range-key='name' @change="handleHospitalChange" range="{{hospitalArray}}">
-              <view class="picker">
-                {{selectedHospitalName}}
-              </view>
-            </picker>
+          <view class="weui-cell__bd" @tap='handleHospitalChange'>
+            <view class="picker">
+              {{selectedHospitalName}}
+            </view>
             <text class='iconfont  icon-zhankai arrow'></text>
           </view>
         </view>
