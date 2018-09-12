@@ -24,11 +24,11 @@
           tips.toast('请输入姓名', null, 'none')
           return
         }
-        if (!this.selectedOfficeValue) {
+        if (!(this.selectedOfficeValue >= 0)) {
           tips.toast('请选择科室', null, 'none')
           return
         }
-        if (!this.selectedTitleValue) {
+        if (!(this.selectedOfficeValue >= 0)) {
           tips.toast('请选择职称', null, 'none')
           return
         }
@@ -101,6 +101,7 @@
           this.user = user
           this.selectedOfficeValue = this.officeArray.findIndex(obj => obj.id === parseInt(this.user.office))
           this.selectedHospitalName = this.user.hospitalName
+          this.selectedHospitalValue = this.user.hospitalValue
           this.selectedTitleValue = this.titleArray.findIndex(obj => obj.id === parseInt(this.user.title))
           this.isEdit = true
           wepy.$instance.globalData['hospital'] = {}
