@@ -94,7 +94,8 @@
         <view class='doc-name'>{{doctor.name}}</view>
         <view class='doc-title'>
           <text class='txt'>{{doctor.title}}</text>
-          <text class='txt'>{{doctor.hospitalName}}</text>
+          <text class='txt'>{{doctor.relation}}</text>
+          <text class='txt'>{{doctor.age}}岁</text>
         </view>
         <image class='doc-avatar' mode='aspectFill' src='{{doctor.avatar}}'></image>
       </view>
